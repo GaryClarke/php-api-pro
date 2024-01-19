@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
+
+/**
+ * This script enables you to create and update your schema
+ * example usage:
+ *
+ * orm:schema-tool:create
+ * orm:schema-tool:update [options e.g. --dump-sql --force]
+ */
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
+$container = require_once dirname(__DIR__) . '/config/di.php';
+
+$entityManager = $container->get(EntityManagerInterface::class);
+
+ConsoleRunner::run(new SingleManagerProvider($entityManager));

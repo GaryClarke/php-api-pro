@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+    web:
+        image: garyclarke/pap-web
+        ports:
+            - "8080:80"  # Maps port 8080 on the host to port 80 in the container
+            - "8443:443" # Maps port 8443 on the host to port 443 in the container (if you're using HTTPS)
+        volumes:
+            - ./public:/var/www/html/public
+    app:
+        image: garyclarke/pap-app
+        environment:
+            MARIADB_HOST: db
+        volumes:
+            - .:/var/www/html
+        extra_hosts:
+            - host.docker.internal:host-gateway
+    db:
+        image: mariadb:11.2
+        command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+        restart: on-failure
+        volumes:
+            - flightsdata:/var/lib/mysql
+        environment:
+            MARIADB_ROOT_PASSWORD: secret
+            MARIADB_DATABASE: flights-api
+            MARIADB_USER: user
+            MARIADB_PASSWORD: secret
+        ports:
+            - "3306:3306"
+volumes:
+    flightsdata:
