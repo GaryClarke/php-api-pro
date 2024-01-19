@@ -17,10 +17,7 @@ $routeCollector->setDefaultInvocationStrategy(new RequestResponseArgs());
 
 // Define routes
 $app->get('/healthcheck', function (Request $request, Response $response) {
-//    $payload = json_encode(['app' => true]);
-//    $response->getBody()->write($payload);
-//    return $response->withHeader('Content-Type', 'application/json');
-
-    $response->getBody()->write('Hello World!');
-    return $response->withHeader('Content-Type', 'text/html');
+    $payload = json_encode(['app' => true]);
+    $response->getBody()->write($payload);
+    return $response->withHeader('Content-Type', 'application/json');
 });
