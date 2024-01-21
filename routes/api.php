@@ -21,3 +21,14 @@ $app->get('/healthcheck', function (Request $request, Response $response) {
     $response->getBody()->write($payload);
     return $response->withHeader('Content-Type', 'application/json');
 });
+
+$app->get('/flights', [\App\Controller\FlightsController::class, 'index']);
+
+
+
+
+
+
+
+
+
