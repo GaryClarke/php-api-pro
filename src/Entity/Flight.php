@@ -16,7 +16,7 @@ class Flight
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 8)]
+    #[ORM\Column(type: 'string', length: 15)]
     private string $number;
 
     #[ORM\Column(type: 'string', length: 3)]
