@@ -1,0 +1,51 @@
+{
+    "flights": [
+        {
+            "number": "JF1001-20250123",
+            "origin": "ABC",
+            "destination": "DEF",
+            "departureTime": "2024-01-21T08:00:00+00:00",
+            "arrivalTime": "2024-01-21T10:00:00+00:00",
+            "links": {
+                "self": {
+                    "href": "/flights/JF1001-20250123"
+                },
+                "originAirport": {
+                    "href": "/airports/ABC"
+                },
+                "destinationAirport": {
+                    "href": "/airports/DEF"
+                }
+            }
+        },
+        {
+            "number": "JF1002-20250123",
+            "origin": "GHI",
+            "destination": "JKL",
+            "departureTime": "2024-01-21T09:00:00+00:00",
+            "arrivalTime": "2024-01-21T11:30:00+00:00",
+            "links": {
+                "self": {
+                    "href": "/flights/JF1002-20250123"
+                },
+                "originAirport": {
+                    "href": "/airports/GHI"
+                },
+                "destinationAirport": {
+                    "href": "/airports/JKL"
+                }
+            }
+        }
+    ],
+    "links": {
+        "self": {
+            "href": "/flights?page=1"
+        },
+        "next": {
+            "href": "/flights?page=2"
+        },
+        "prev": {
+            "href": "/flights?page=0"
+        }
+    }
+}
