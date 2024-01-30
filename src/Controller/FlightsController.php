@@ -22,7 +22,7 @@ readonly class FlightsController extends ApiController
         // Return the response containing the flights
         $response->getBody()->write($jsonFlights);
 
-        return $response->withHeader('Content-Type', 'application/json');
+        return $response;
     }
 
     public function show(Request $request, Response $response, string $number): Response
@@ -34,8 +34,7 @@ readonly class FlightsController extends ApiController
 
         $response->getBody()->write($jsonFlight);
 
-        return $response->withHeader('Content-Type', 'application/json');
-        // response.data.flight.origin
+        return $response;
     }
 }
 
