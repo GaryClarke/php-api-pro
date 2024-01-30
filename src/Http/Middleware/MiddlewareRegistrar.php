@@ -33,7 +33,7 @@ final readonly class MiddlewareRegistrar
         $app = $this->app;
 
         // .. register custom middleware here
-        $app->add(new ContentTypeMiddleware(new ContentTypeNegotiator()));
+        $app->add(new ContentTypeMiddleware());
     }
 
     private function registerDefaultMiddleware(): void

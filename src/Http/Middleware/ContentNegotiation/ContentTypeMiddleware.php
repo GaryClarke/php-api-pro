@@ -11,14 +11,22 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 readonly class ContentTypeMiddleware implements MiddlewareInterface
 {
-    public function __construct(
-        private ContentTypeNegotiator $contentNegotiator
-    ) {
-    }
-
     public function process(Request $request, RequestHandler $handler): Response
     {
-        $request = $this->contentNegotiator->negotiate($request);
+        // Do what we want to do with the received request
+        $accept = $request->getHeaderLine('Accept');
+
+        $requestedFormats = explode(',', $accept);
+
+        foreach ($requestedFormats as $requestedFormat) {
+            if ($format = ContentType::tryFrom($requestedFormat)) {
+                break;
+            }
+        }
+
+        $contentType = ($format ?? ContentType::JSON)->value;
+
+        $request = $request->withAttribute('content-type', $contentType);
 
         // Handle the request..returns a Response
         $response = $handler->handle($request);
