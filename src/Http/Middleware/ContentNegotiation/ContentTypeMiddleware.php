@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Middleware\ContentNegotiation;
+
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Psr\Http\Server\MiddlewareInterface;
+use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
+
+readonly class ContentTypeMiddleware implements MiddlewareInterface
+{
+    public function __construct(
+        private ContentTypeNegotiator $contentNegotiator
+    )
+    {
+    }
+
+    public function process(Request $request, RequestHandler $handler): Response
+    {
+        // 1. Do what we want to do with the request
+        $request = $this->contentNegotiator->negotiate($request);
+
+        // 2. Handler the request..returns a response
+        $response = $handler->handle($request);
+
+        // 3. Return the response
+        return $response->withHeader('Content-Type', $request->getAttribute('content-type'));
+    }
+}

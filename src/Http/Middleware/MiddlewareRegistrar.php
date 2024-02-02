@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware;
 
+use App\Http\Middleware\ContentNegotiation\ContentTypeMiddleware;
+use App\Http\Middleware\ContentNegotiation\ContentTypeNegotiator;
 use Middlewares\TrailingSlash;
 use Slim\App;
 
@@ -31,6 +33,7 @@ final readonly class MiddlewareRegistrar
         $app = $this->app;
 
         // .. register custom middleware here
+        $app->add(new ContentTypeMiddleware(new ContentTypeNegotiator()));
     }
 
     private function registerDefaultMiddleware(): void
