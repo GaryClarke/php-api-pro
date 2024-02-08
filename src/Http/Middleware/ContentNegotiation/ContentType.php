@@ -10,4 +10,14 @@ enum ContentType: string
     case HTML = 'text/html';
     case XML = 'application/xml';
     case CSV = 'text/csv';
+
+    public function format(): string
+    {
+        return match ($this) {
+            self::JSON => 'json',
+            self::HTML => 'html',
+            self::XML => 'xml',
+            self::CSV => 'csv',
+        };
+    }
 }

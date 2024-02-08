@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Flight;
-use Psr\Http\Message\RequestInterface as Request;
+use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
 readonly class FlightsController extends ApiController
@@ -17,7 +17,10 @@ readonly class FlightsController extends ApiController
             ->findAll();
 
         // Serialize the flights
-        $jsonFlights = $this->serializer->serialize(['flights' => $flights], 'json');
+        $jsonFlights = $this->serializer->serialize(
+            ['flights' => $flights],
+            $request->getAttribute('content-type')->format()
+        );
 
         // Return the response containing the flights
         $response->getBody()->write($jsonFlights);
@@ -30,7 +33,10 @@ readonly class FlightsController extends ApiController
         $flight = $this->entityManager->getRepository(Flight::class)
             ->findOneBy(['number' => $number]);
 
-        $jsonFlight = $this->serializer->serialize(['flight' => $flight], 'json');
+        $jsonFlight = $this->serializer->serialize(
+            ['flight' => $flight],
+            $request->getAttribute('content-type')->format()
+        );
 
         $response->getBody()->write($jsonFlight);
 

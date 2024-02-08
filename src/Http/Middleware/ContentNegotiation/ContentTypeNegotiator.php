@@ -21,7 +21,7 @@ class ContentTypeNegotiator implements ContentNegotiationInterface
             }
         }
 
-        $contentType = ($format ?? ContentType::JSON)->value;
+        $contentType = ($format ?? ContentType::JSON);
 
         return $request->withAttribute('content-type', $contentType);
     }
