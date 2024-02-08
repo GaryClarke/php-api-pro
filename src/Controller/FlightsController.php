@@ -12,20 +12,17 @@ readonly class FlightsController extends ApiController
 {
     public function index(Request $request, Response $response): Response
     {
-        // Retrieve the flights
         $flights = $this->entityManager->getRepository(Flight::class)
             ->findAll();
 
-        // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
             ['flights' => $flights],
             $request->getAttribute('content-type')->format()
         );
 
-        // Return the response containing the flights
         $response->getBody()->write($jsonFlights);
 
-        return $response;
+        return $response->withHeader('Cache-Control', 'public, max-age=600');
     }
 
     public function show(Request $request, Response $response, string $number): Response
