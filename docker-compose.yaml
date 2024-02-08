@@ -21,13 +21,13 @@ services:
         command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
         restart: on-failure
         volumes:
-            - flightsdata:/var/lib/mysql
+            - papdiscovery:/var/lib/mysql
         environment:
             MARIADB_ROOT_PASSWORD: secret
-            MARIADB_DATABASE: flights-api
+            MARIADB_DATABASE: pap-discovery
             MARIADB_USER: user
             MARIADB_PASSWORD: secret
         ports:
             - "3306:3306"
 volumes:
-    flightsdata:
+    papdiscovery:
