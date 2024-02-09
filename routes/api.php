@@ -29,6 +29,8 @@ $app->get(
     [\App\Controller\FlightsController::class, 'show']
 );
 
+$app->post('/flights', [\App\Controller\FlightsController::class, 'store']);
+
 
 
 

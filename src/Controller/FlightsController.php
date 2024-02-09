@@ -39,10 +39,34 @@ readonly class FlightsController extends ApiController
 
         return $response;
     }
+
+    public function store(Request $request, Response $response): Response
+    {
+        // Grab the post data and map to a flight
+        $flightJson = $request->getBody()->getContents();
+
+        $flight = $this->serializer->deserialize(
+            $flightJson,
+            Flight::class,
+            $request->getAttribute('content-type')->format()
+        );
+
+        // Validate the post data (happy path for now..save for Error Handling section)
+
+        // Save the post data
+        $this->entityManager->persist($flight);
+        $this->entityManager->flush();
+
+        // Serialize the new flight
+        $jsonFlight = $this->serializer->serialize(
+            ['flight' => $flight],
+            $request->getAttribute('content-type')->format()
+        );
+
+        // Add the flight to the response body
+        $response->getBody()->write($jsonFlight);
+
+        // Return the response
+        return $response;
+    }
 }
-
-
-
-
-
-

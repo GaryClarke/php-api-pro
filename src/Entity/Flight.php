@@ -66,9 +66,9 @@ class Flight
         return $this->departureTime;
     }
 
-    public function setDepartureTime(DateTimeImmutable $departureTime): void
+    public function setDepartureTime(string|DateTimeImmutable $departureTime): void
     {
-        $this->departureTime = $departureTime;
+        $this->departureTime = new DateTimeImmutable($departureTime);
     }
 
     public function getArrivalTime(): DateTimeImmutable
@@ -76,8 +76,8 @@ class Flight
         return $this->arrivalTime;
     }
 
-    public function setArrivalTime(DateTimeImmutable $arrivalTime): void
+    public function setArrivalTime(string|DateTimeImmutable $arrivalTime): void
     {
-        $this->arrivalTime = $arrivalTime;
+        $this->arrivalTime = new DateTimeImmutable($arrivalTime);
     }
 }
