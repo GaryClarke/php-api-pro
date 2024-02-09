@@ -70,4 +70,19 @@ readonly class FlightsController extends ApiController
         // Return the response
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
     }
+
+    public function destroy(Request $request, Response $response, string $number): Response
+    {
+        $flight = $this->entityManager->getRepository(Flight::class)
+            ->findOneBy(['number' => $number]);
+
+        if ($flight === null) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
+        $this->entityManager->remove($flight);
+        $this->entityManager->flush();
+
+        return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
 }
