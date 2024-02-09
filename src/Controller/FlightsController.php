@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Flight;
+use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 
@@ -67,6 +68,6 @@ readonly class FlightsController extends ApiController
         $response->getBody()->write($jsonFlight);
 
         // Return the response
-        return $response;
+        return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
     }
 }
