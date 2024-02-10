@@ -24,6 +24,9 @@ readonly class ContentTypeMiddleware implements MiddlewareInterface
         $response = $handler->handle($request);
 
         // Return the response
-        return $response->withHeader('Content-Type', $request->getAttribute('content-type'));
+        return $response->withHeader(
+            'Content-Type',
+            $request->getAttribute('content-type')->value
+        );
     }
 }
