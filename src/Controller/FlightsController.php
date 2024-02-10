@@ -85,4 +85,43 @@ readonly class FlightsController extends ApiController
 
         return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
     }
+
+    public function update(Request $request, Response $response, string $number): Response
+    {
+        $flight = $this->entityManager->getRepository(Flight::class)
+            ->findOneBy(['number' => $number]);
+
+        if ($flight === null) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
+        // Grab the post data and map to a flight
+        $flightJson = $request->getBody()->getContents();
+
+        // Deserialize
+        $flight = $this->serializer->deserialize(
+            $flightJson,
+            Flight::class,
+            $request->getAttribute('content-type')->format()
+        );
+
+        // Validate the post data (happy path for now..save for Error Handling section)
+
+        // Persist
+        $this->entityManager->persist($flight);
+        $this->entityManager->flush();
+
+        // Save the post data
+
+        // Serialize the new flight
+        $jsonFlight = $this->serializer->serialize(
+            ['flight' => $flight],
+            $request->getAttribute('content-type')->format()
+        );
+
+        // Add the flight to the response body
+        $response->getBody()->write($jsonFlight);
+
+        return $response->withStatus(StatusCodeInterface::STATUS_OK);
+    }
 }

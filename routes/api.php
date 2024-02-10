@@ -36,6 +36,11 @@ $app->delete(
     [\App\Controller\FlightsController::class, 'destroy']
 );
 
+$app->put(
+    '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}',
+    [\App\Controller\FlightsController::class, 'update']
+);
+
 
 
 
