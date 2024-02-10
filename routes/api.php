@@ -41,6 +41,11 @@ $app->put(
     [\App\Controller\FlightsController::class, 'update']
 );
 
+$app->patch(
+    '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}',
+    [\App\Controller\FlightsController::class, 'update']
+);
+
 
 
 

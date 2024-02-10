@@ -8,6 +8,8 @@ use App\Entity\Flight;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
 
 readonly class FlightsController extends ApiController
 {
@@ -98,11 +100,18 @@ readonly class FlightsController extends ApiController
         // Grab the post data and map to a flight
         $flightJson = $request->getBody()->getContents();
 
+        $context = [];
+
+        if ($request->getMethod() === 'PATCH') {
+            $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $flight;
+        }
+
         // Deserialize
         $flight = $this->serializer->deserialize(
             $flightJson,
             Flight::class,
-            $request->getAttribute('content-type')->format()
+            $request->getAttribute('content-type')->format(),
+            $context
         );
 
         // Validate the post data (happy path for now..save for Error Handling section)
