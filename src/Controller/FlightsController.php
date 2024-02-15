@@ -100,18 +100,12 @@ readonly class FlightsController extends ApiController
         // Grab the post data and map to a flight
         $flightJson = $request->getBody()->getContents();
 
-        $context = [];
-
-        if ($request->getMethod() === 'PATCH') {
-            $context[AbstractNormalizer::OBJECT_TO_POPULATE] = $flight;
-        }
-
         // Deserialize
         $flight = $this->serializer->deserialize(
             $flightJson,
             Flight::class,
             $request->getAttribute('content-type')->format(),
-            $context
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $flight]
         );
 
         // Validate the post data (happy path for now..save for Error Handling section)
