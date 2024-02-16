@@ -41,7 +41,7 @@ readonly class FlightsController extends ApiController
 
         $response->getBody()->write($jsonFlight);
 
-        return $response;
+        return $response->withHeader('Cache-Control', 'public, max-age=600');
     }
 }
 
