@@ -17,6 +17,10 @@ readonly class FlightsController extends ApiController
         $flights = $this->entityManager->getRepository(Flight::class)
             ->findAll();
 
+        if(!$flights) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
             ['flights' => $flights],
@@ -33,6 +37,10 @@ readonly class FlightsController extends ApiController
     {
         $flight = $this->entityManager->getRepository(Flight::class)
             ->findOneBy(['number' => $number]);
+
+        if (!$flight) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
 
         // Serialize the flights
         $jsonFlight = $this->serializer->serialize(
@@ -74,6 +82,25 @@ readonly class FlightsController extends ApiController
 
         // Return the response
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
+    }
+
+    public function destroy(Request $request, Response $response, string $number): Response
+    {
+        // Query for the flight with the number: $number
+        $flight = $this->entityManager->getRepository(Flight::class)
+            ->findOneBy(['number' => $number]);
+
+        // Handle not found resource
+        if (!$flight) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
+        // Remove from DB
+        $this->entityManager->remove($flight);
+        $this->entityManager->flush();
+
+        // Return response with no content status code
+        return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
     }
 }
 
