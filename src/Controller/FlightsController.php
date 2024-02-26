@@ -8,6 +8,7 @@ use App\Entity\Flight;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 readonly class FlightsController extends ApiController
 {
@@ -101,6 +102,45 @@ readonly class FlightsController extends ApiController
 
         // Return response with no content status code
         return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    public function update(Request $request, Response $response, string $number): Response
+    {
+        // Retrieve flight using flight number
+        $flight = $this->entityManager->getRepository(Flight::class)
+            ->findOneBy(['number' => $number]);
+
+        // Return not found if necessary
+        if (!$flight) {
+            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
+        }
+
+        // Grab the post data and map to the flight
+        $flightJson = $request->getBody()->getContents();
+
+        $flight = $this->serializer->deserialize(
+            $flightJson,
+            Flight::class,
+            $request->getAttribute('content-type')->format(),
+            [AbstractNormalizer::OBJECT_TO_POPULATE => $flight]
+        );
+
+        // Validate the post data (happy path for now..save for Error Handling section)
+
+        // Persist
+        $this->entityManager->persist($flight);
+        $this->entityManager->flush();
+
+        // Serialize the updated flight
+        $jsonFlight = $this->serializer->serialize(
+            ['flight' => $flight],
+            $request->getAttribute('content-type')->format()
+        );
+
+        // Add the flight to the response body
+        $response->getBody()->write($jsonFlight);
+
+        return $response;
     }
 }
 
