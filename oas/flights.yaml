@@ -1,0 +1,20 @@
+openapi: 3.0.3
+
+info:
+  title: Flights API - OpenAPI 3.0
+  description: |-
+    This is a sample Flights Server based on the OpenAPI 3.0 specification which accompanies the [PHP API Pro](https://www.garyclarke.tech/p/php-api-pro) course at [garyclarke.tech](https://www.garyclarke.tech).  
+    
+    The course shows you how to build a Flights API in PHP using a **Design-first** approach.
+  version: 1.0.0
+
+servers:
+  - url: https://jet-fu.com
+
+tags:
+  - name: flight
+    description: Flight operations
+  - name: reservation
+    description: Reservation operations
+  - name: passenger
+    description: Passenger operations
