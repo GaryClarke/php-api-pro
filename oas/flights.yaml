@@ -18,3 +18,781 @@ tags:
     description: Reservation operations
   - name: passenger
     description: Passenger operations
+
+paths:
+  /flights:
+
+    #--------------- getFlights ---------------
+    get:
+      tags:
+        - flight
+      summary: Find all flights
+      description: Get a paginated list of flights
+      operationId: getFlights
+      parameters:
+        - in: query
+          name: number
+          schema:
+            type: string
+          description: Filter by flight number
+        - in: query
+          name: origin
+          schema:
+            type: string
+          description: Filter by origin location
+        - in: query
+          name: destination
+          schema:
+            type: string
+          description: Filter by destination location
+        - in: query
+          name: departureTime
+          schema:
+            type: string
+          description: Filter by departure date (use YYYY-MM-DD)
+        - in: query
+          name: sort
+          schema:
+            type: string
+            enum: [departureTime, -departureTime]
+          description: |
+            Sort the results by departure time. Use 'departureTime' for ascending order or '-departureTime' for descending order.
+          example: departureTime
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flights:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/FlightResponse'
+                  links:
+                    $ref: '#/components/schemas/Links'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+
+    #--------------- postFlight ---------------
+    post:
+      tags:
+        - flight
+      summary: Create a new flight
+      description: Create a new flight
+      operationId: postFlight
+      requestBody:
+        description: Flight request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flight'
+        required: true
+      responses:
+        '201':
+          description: Flight successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FlightResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+  /flights/{number}:
+
+    #--------------- getFlight ---------------
+    get:
+      tags:
+        - flight
+      summary: Find a flight by number
+      description: Find a flight by number
+      operationId: getFlight
+      parameters:
+        - name: number
+          in: path
+          description: Number of flight to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/FlightNumber'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flight:
+                    $ref: '#/components/schemas/FlightResponse'
+        '400':
+          description: Invalid flight number supplied
+        '404':
+          description: Flight not found
+
+    #--------------- deleteFlight ---------------
+    delete:
+      tags:
+        - flight
+      summary: Delete a flight
+      description: Delete a flight by number
+      operationId: deleteFlight
+      parameters:
+        - name: number
+          in: path
+          description: Number of the flight to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/FlightNumber'
+      responses:
+        '204':
+          description: Successful operation (no content)
+        '400':
+          description: Invalid flight number supplied
+        '404':
+          description: Flight not found
+
+    #--------------- putFlight ---------------
+    put:
+      tags:
+        - flight
+      summary: Fully update an existing flight
+      description: Fully update an existing flight by number
+      operationId: putFlight
+      parameters:
+        - name: number
+          in: path
+          description: Number of flight to update
+          required: true
+          schema:
+            $ref: '#/components/schemas/FlightNumber'
+      requestBody:
+        description: Flight request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flight'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flight:
+                    $ref: '#/components/schemas/FlightResponse'
+        '400':
+          description: Invalid flight number supplied
+        '404':
+          description: Flight not found
+        '422':
+          description: Validation exception
+
+    #--------------- patchFlight ---------------
+    patch:
+      tags:
+        - flight
+      summary: Partially update an existing flight
+      description: Partially update an existing flight by number
+      operationId: patchFlight
+      parameters:
+        - name: number
+          in: path
+          description: Number of flight to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/FlightNumber'
+      requestBody:
+        description: Flight request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Flight'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  flight:
+                    $ref: '#/components/schemas/FlightResponse'
+        '400':
+          description: Invalid flight number supplied
+        '404':
+          description: Flight not found
+        '422':
+          description: Validation exception
+
+  /reservations:
+
+    #--------------- getReservations ---------------
+    get: # learn how to filter this
+      tags:
+        - reservation
+      summary: Find all reservations
+      description: Get a paginated list of reservations
+      operationId: getReservations
+      parameters:
+        - in: query
+          name: flightNumber
+          schema:
+            type: string
+          description: Filter by flight number
+        - in: query
+          name: passengerRef
+          schema:
+            type: string
+          description: Filter by passenger reference
+        - in: query
+          name: createdAt
+          schema:
+            type: string
+          description: Filter by reservation date (use YYYY-MM-DD)
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  reservations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReservationResponse'
+                  links:
+                    $ref: '#/components/schemas/Links'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+
+    #--------------- postReservations ---------------
+    post:
+      tags:
+        - reservation
+      summary: Create a new reservation
+      description: Create a new reservation
+      operationId: postReservations
+      requestBody:
+        description: Reservation request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        '201':
+          description: Reservation successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+  /reservations/{reference}:
+
+    #--------------- getReservation ---------------
+    get:
+      tags:
+        - reservation
+      summary: Find a reservation by reference
+      description: Find a reservation by reference
+      operationId: getReservation
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of reservation to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReservationReference'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid reservation reference supplied
+        '404':
+          description: Reservation not found
+
+    #--------------- deleteReservation ---------------
+    delete:
+      tags:
+        - reservation
+      summary: Cancel a reservation by reference
+      description: Cancel a reservation by reference
+      operationId: deleteReservation
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of reservation to cancel
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReservationReference'
+      responses:
+        '204':
+          description: Successful operation (no content)
+        '400':
+          description: Invalid reservation reference supplied
+        '404':
+          description: Reservation not found
+
+    #--------------- putReservation ---------------
+    put:
+      tags:
+        - reservation
+      summary: Fully update an existing reservation by reference
+      description: Fully update an existing reservation by reference
+      operationId: putReservation
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of reservation to update
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReservationReference'
+      requestBody:
+        description: Reservation request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid reservation reference supplied
+        '404':
+          description: Reservation not found
+        '422':
+          description: Validation exception
+
+    #--------------- patchReservation ---------------
+    patch:
+      tags:
+        - reservation
+      summary: Partially update an existing reservation by reference
+      description: Partially update an existing reservation by reference
+      operationId: patchReservation
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of reservation to update
+          required: true
+          schema:
+            $ref: '#/components/schemas/ReservationReference'
+      requestBody:
+        description: Reservation request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid reservation reference supplied
+        '404':
+          description: Reservation not found
+        '422':
+          description: Validation exception
+
+  /passengers:
+
+    #--------------- getPassengers ---------------
+    get:
+      tags:
+        - passenger
+      summary: Find all passengers
+      description: Get a paginated list of passengers
+      operationId: getPassengers
+      parameters:
+        - in: query
+          name: lastName
+          schema:
+            type: string
+          description: Filter by passenger last name
+        - in: query
+          name: passportNumber
+          schema:
+            type: string
+          description: Filter by passport number
+        - in: query
+          name: dateOfBirth
+          schema:
+            type: string
+          description: Filter by date of birth
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passengers:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PassengerResponse'
+
+    #--------------- postPassengers ---------------
+    post:
+      tags:
+        - passenger
+      summary: Create a new passenger
+      description: Create a new passenger
+      operationId: postPassengers
+      requestBody:
+        description: Passenger request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Passenger'
+        required: true
+      responses:
+        '201':
+          description: Passenger successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassengerResponse'
+        '400':
+          description: Invalid input
+        '422':
+          description: Validation exception
+
+  /passengers/{reference}:
+
+    #--------------- getPassenger ---------------
+    get:
+      tags:
+        - passenger
+      summary: Find a passenger by reference
+      description: Find a passenger by reference
+      operationId: getPassenger
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of passenger to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/PassengerReference'
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservationResponse'
+        '400':
+          description: Invalid passenger reference supplied
+        '404':
+          description: Passenger not found
+
+    #--------------- deletePassenger ---------------
+    delete:
+      tags:
+        - passenger
+      summary: Delete a passenger by reference
+      description: Delete a passenger by reference
+      operationId: deletePassenger
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of passenger to delete
+          required: true
+          schema:
+            $ref: '#/components/schemas/PassengerReference'
+      responses:
+        '204':
+          description: Successful operation (no content)
+        '400':
+          description: Invalid passenger reference supplied
+        '404':
+          description: Passenger not found
+
+    #--------------- putPassenger ---------------
+    put:
+      tags:
+        - passenger
+      summary: Fully update an existing passenger by reference
+      description: Fully update an existing passenger by reference
+      operationId: putPassenger
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of passenger to update
+          required: true
+          schema:
+            $ref: '#/components/schemas/PassengerReference'
+      requestBody:
+        description: Passenger request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Passenger'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassengerResponse'
+        '400':
+          description: Invalid passenger reference supplied
+        '404':
+          description: Passenger not found
+        '422':
+          description: Validation exception
+
+    #--------------- patchPassenger ---------------
+    patch:
+      tags:
+        - passenger
+      summary: Partially update an existing passenger by reference
+      description: Partially update an existing passenger by reference
+      operationId: patchPassenger
+      parameters:
+        - name: reference
+          in: path
+          description: Reference of passenger to return
+          required: true
+          schema:
+            $ref: '#/components/schemas/PassengerReference'
+      requestBody:
+        description: Passenger request body
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Passenger'
+        required: true
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PassengerResponse'
+        '400':
+          description: Invalid passenger reference supplied
+        '404':
+          description: Passenger not found
+        '422':
+          description: Validation exception
+
+components:
+  schemas:
+
+    #--------------- FlightNumber ---------------
+    FlightNumber:
+      type: string
+      pattern: '^[A-Z]{2}\d{4}-\d{8}$'
+      example: 'JF1011-20240122'
+
+    #--------------- Flight ---------------
+    Flight:
+      type: object
+      properties:
+        origin:
+          type: string
+          description: Origin location code
+          example: AAA
+        destination:
+          type: string
+          description: Destination location code
+          example: AAA
+        departureTime:
+          type: string
+          format: date-time
+          example: '2024-01-22T13:45:00+00:00'
+        arrivalTime:
+          type: string
+          format: date-time
+          example: '2024-01-22T13:45:00+00:00'
+
+    #--------------- FlightResponse ---------------
+    FlightResponse:
+      allOf:
+        - type: object
+          properties:
+            number:
+              $ref: '#/components/schemas/FlightNumber'
+          required:
+            - number
+        - $ref: '#/components/schemas/Flight'
+
+    #--------------- ReservationReference ---------------
+    ReservationReference:
+      type: string
+      description: A unique identifier for the reservation
+      example: 'AB1234ABCD12'
+
+    #--------------- Reservation ---------------
+    Reservation:
+      type: object
+      properties:
+        flightNumber:
+          $ref: '#/components/schemas/FlightNumber'
+        passengerRef:
+          $ref: '#/components/schemas/PassengerReference'
+        seatNumber:
+          type: string
+          example: '12A'
+        travelClass:
+          type: string
+          example: Economy
+          enum:
+            - Economy
+            - Business
+            - First
+        createdAt:
+          type: string
+          format: date-time
+          example: '2024-01-22T13:45:00+00:00'
+        cancelledAt:
+          type: string
+          format: date-time
+          nullable: true
+          example: '2024-01-22T13:45:00+00:00'
+
+    #--------------- ReservationResponse ---------------
+    ReservationResponse:
+      allOf:
+        - type: object
+          properties:
+            reference:
+              $ref: '#/components/schemas/ReservationReference'
+          required:
+            - reference
+        - $ref: '#/components/schemas/Reservation'
+
+    #--------------- PassengerReference ---------------
+    PassengerReference:
+      type: string
+      description: A unique identifier for the passenger
+      example: 'AB1234ABCD12'
+
+    #--------------- Passenger ---------------
+    Passenger:
+      type: object
+      required:
+        - firstName
+        - lastName
+        - dateOfBirth
+      properties:
+        firstNames:
+          type: string
+          example: 'Adam Philip'
+        lastName:
+          type: string
+          example: 'Cooper'
+        passportNumber:
+          type: string
+          example: 'C01234567'
+        dateOfBirth:
+          type: string
+          format: 'date'
+          example: '1977-06-09'
+        gender:
+          type: string
+          enum: ['Male', 'Female', 'Other']
+          example: 'Male'
+        nationality:
+          type: string
+          example: 'UK'
+
+    #--------------- PassengerResponse ---------------
+    PassengerResponse:
+      allOf:
+        - type: object
+          properties:
+            reference:
+              $ref: '#/components/schemas/PassengerReference'
+          required:
+            - reference
+        - $ref: '#/components/schemas/Passenger'
+
+    #--------------- Links ---------------
+    Links:
+      type: object
+      properties:
+        self:
+          type: string
+          format: uri
+          description: The link to the current page of results
+        # Pagination
+        first:
+          type: string
+          format: uri
+          description: The link to the first page of results
+        prev:
+          type: string
+          format: uri
+          description: The link to the previous page of results, if any
+        next:
+          type: string
+          format: uri
+          description: The link to the next page of results, if any
+        last:
+          type: string
+          format: uri
+          description: The link to the last page of results
+
+    #--------------- Meta ---------------
+    Meta:
+      type: object
+      properties:
+        totalItems:
+          type: integer
+          description: The total number of items
+        totalPages:
+          type: integer
+          description: The total number of pages
+        currentPage:
+          type: integer
+          description: The current page number
+        itemsPerPage:
+          type: integer
+          description: The number of items per page
+
+  securitySchemes:
+
+    FlightsAuth:
+      type: oauth2
+      flows:
+        implicit:
+          authorizationUrl: https://jet-fu.com/oauth/authorize
+          scopes:
+            write:flights: modify flights
+            read:flights: read flights
+
+    ApiKeyAuth: # Arbitrary name for the security scheme
+      type: apiKey
+      in: header # The location of the API key (query, header, cookie)
+      name: api_key # The name of the header or query parameter to be used
+
+security:
+  - ApiKeyAuth: [] # Apply the ApiKeyAuth security scheme globally
