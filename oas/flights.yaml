@@ -742,23 +742,28 @@ components:
         self:
           type: string
           format: uri
+          example: /flights?page=2
           description: The link to the current page of results
         # Pagination
         first:
           type: string
           format: uri
+          example: /flights?page=1
           description: The link to the first page of results
         prev:
           type: string
           format: uri
+          example: /flights?page=1
           description: The link to the previous page of results, if any
         next:
           type: string
           format: uri
+          example: /flights?page=3
           description: The link to the next page of results, if any
         last:
           type: string
           format: uri
+          example: /flights?page=5
           description: The link to the last page of results
 
     #--------------- Meta ---------------
@@ -767,15 +772,19 @@ components:
       properties:
         totalItems:
           type: integer
+          example: 100
           description: The total number of items
         totalPages:
           type: integer
+          example: 5
           description: The total number of pages
         currentPage:
           type: integer
+          example: 1
           description: The current page number
         itemsPerPage:
           type: integer
+          example: 20
           description: The number of items per page
 
   securitySchemes:
