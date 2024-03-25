@@ -18,19 +18,11 @@ use Throwable;
 
 class HttpErrorHandler extends ErrorHandler
 {
-    public const BAD_REQUEST = 'BAD_REQUEST';
-    public const INSUFFICIENT_PRIVILEGES = 'INSUFFICIENT_PRIVILEGES';
-    public const NOT_ALLOWED = 'NOT_ALLOWED';
-    public const NOT_IMPLEMENTED = 'NOT_IMPLEMENTED';
-    public const RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND';
-    public const SERVER_ERROR = 'SERVER_ERROR';
-    public const UNAUTHENTICATED = 'UNAUTHENTICATED';
-
     protected function respond(): ResponseInterface
     {
         $exception = $this->exception;
         $statusCode = 500;
-        $type = self::SERVER_ERROR;
+        $type = ProblemDetail::INTERNAL_SERVER_ERROR;
         $description = 'An internal error has occurred while processing your request.';
 
         if ($exception instanceof HttpException) {
@@ -38,17 +30,17 @@ class HttpErrorHandler extends ErrorHandler
             $description = $exception->getDescription();
 
             if ($exception instanceof HttpNotFoundException) {
-                $type = self::RESOURCE_NOT_FOUND;
+                $problem = ProblemDetail::NOT_FOUND;
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
-                $type = self::NOT_ALLOWED; // ProblemDetails::NOT_ALLOWED
+                $problem = ProblemDetail::METHOD_NOT_ALLOWED;
             } elseif ($exception instanceof HttpUnauthorizedException) {
-                $type = self::UNAUTHENTICATED;
+                $problem = ProblemDetail::UNAUTHORIZED;
             } elseif ($exception instanceof HttpForbiddenException) {
-                $type = self::UNAUTHENTICATED;
+                $problem = ProblemDetail::FORBIDDEN;
             } elseif ($exception instanceof HttpBadRequestException) {
-                $type = self::BAD_REQUEST;
+                $problem = ProblemDetail::BAD_REQUEST;
             } elseif ($exception instanceof HttpNotImplementedException) {
-                $type = self::NOT_IMPLEMENTED;
+                $problem = ProblemDetail::NOT_IMPLEMENTED;
             }
         }
 
@@ -61,7 +53,7 @@ class HttpErrorHandler extends ErrorHandler
         }
 
         $error = [
-            'type' => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.5', // $problem->type()
+            'type' => $problem->type(),
             'title' => $exception->getTitle(),
             'detail' => $description,
             'instance' => $this->request->getUri()->getPath(),
