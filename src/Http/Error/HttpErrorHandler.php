@@ -35,12 +35,12 @@ class HttpErrorHandler extends ErrorHandler
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();
-            $description = $exception->getMessage();
+            $description = $exception->getDescription();
 
             if ($exception instanceof HttpNotFoundException) {
                 $type = self::RESOURCE_NOT_FOUND;
             } elseif ($exception instanceof HttpMethodNotAllowedException) {
-                $type = self::NOT_ALLOWED;
+                $type = self::NOT_ALLOWED; // ProblemDetails::NOT_ALLOWED
             } elseif ($exception instanceof HttpUnauthorizedException) {
                 $type = self::UNAUTHENTICATED;
             } elseif ($exception instanceof HttpForbiddenException) {
@@ -61,17 +61,28 @@ class HttpErrorHandler extends ErrorHandler
         }
 
         $error = [
-            'statusCode' => $statusCode,
-            'error' => [
-                'type' => $type,
-                'description' => $description,
-            ],
+            'type' => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.5', // $problem->type()
+            'title' => $exception->getTitle(),
+            'detail' => $description,
+            'instance' => $this->request->getUri()->getPath(),
+            # extensions (examples) - Use custom exceptions for these and array merge the extensions
+            'errors' => [
+                [
+                    "detail" => "must be a positive integer",
+                    "pointer" => "#/age"
+                ],
+                [
+                    "detail" => "must be a positive integer",
+                    "pointer" => "#/age"
+                ],
+            ]
         ];
 
         $payload = json_encode($error, JSON_PRETTY_PRINT);
 
         $response = $this->responseFactory->createResponse($statusCode);
         $response->getBody()->write($payload);
+        $response = $response->withHeader('Content-Type', 'application/problem+json');
 
         return $response;
     }
