@@ -36,6 +36,8 @@ class EntityValidator
             ];
         }
 
+        dd($validationErrors);
+
         // Create a ValidationException
 
         // Add errors to the ValidationException

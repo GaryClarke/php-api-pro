@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'flights')]
@@ -17,18 +18,23 @@ class Flight implements EntityInterface
     private ?int $id = null;
 
     #[ORM\Column(type: 'string', length: 15)]
+    #[Assert\NotBlank]
     private string $number;
 
     #[ORM\Column(type: 'string', length: 3)]
+    #[Assert\NotBlank]
     private string $origin;
 
     #[ORM\Column(type: 'string', length: 3)]
+    #[Assert\NotBlank]
     private string $destination;
 
     #[ORM\Column(name: 'departure_time', type: 'datetime_immutable')]
+    #[Assert\NotBlank]
     private DateTimeImmutable $departureTime;
 
     #[ORM\Column(name: 'arrival_time', type: 'datetime_immutable')]
+    #[Assert\NotBlank]
     private DateTimeImmutable $arrivalTime;
 
     public function getNumber(): string
