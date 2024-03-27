@@ -67,6 +67,7 @@ readonly class FlightsController extends ApiController
         );
 
         // Validate the post data (happy path for now..save for Error Handling section)
+        $this->validator->validate($flight, $request);
 
         // Save the flight to the DB
         $this->entityManager->persist($flight);

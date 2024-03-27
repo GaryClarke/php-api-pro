@@ -58,16 +58,16 @@ class HttpErrorHandler extends ErrorHandler
             'detail' => $description,
             'instance' => $this->request->getUri()->getPath(),
             # extensions (examples) - Use custom exceptions for these and array merge the extensions
-            'errors' => [
-                [
-                    "detail" => "must be a positive integer",
-                    "pointer" => "#/age"
-                ],
-                [
-                    "detail" => "must be a positive integer",
-                    "pointer" => "#/age"
-                ],
-            ]
+//            'errors' => [
+//                [
+//                    "detail" => "must be a positive integer",
+//                    "pointer" => "#/age"
+//                ],
+//                [
+//                    "detail" => "must be a positive integer",
+//                    "pointer" => "#/age"
+//                ],
+//            ]
         ];
 
         $payload = json_encode($error, JSON_PRETTY_PRINT);
