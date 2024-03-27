@@ -22,12 +22,14 @@ class HttpErrorHandler extends ErrorHandler
     {
         $exception = $this->exception;
         $statusCode = 500;
-        $type = ProblemDetail::INTERNAL_SERVER_ERROR;
+        $problem = ProblemDetail::INTERNAL_SERVER_ERROR;
         $description = 'An internal error has occurred while processing your request.';
+        $title = '500 Internal Server Error';
 
         if ($exception instanceof HttpException) {
             $statusCode = $exception->getCode();
             $description = $exception->getDescription();
+            $title = $exception->getTitle();
 
             if ($exception instanceof HttpNotFoundException) {
                 $problem = ProblemDetail::NOT_FOUND;
@@ -54,7 +56,7 @@ class HttpErrorHandler extends ErrorHandler
 
         $error = [
             'type' => $problem->type(),
-            'title' => $exception->getTitle(),
+            'title' => $title,
             'detail' => $description,
             'instance' => $this->request->getUri()->getPath(),
             # extensions (examples) - Use custom exceptions for these and array merge the extensions

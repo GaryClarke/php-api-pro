@@ -59,5 +59,11 @@ $container->add(\Symfony\Component\Serializer\SerializerInterface::class, functi
     return new \Symfony\Component\Serializer\Serializer($normalizers, $encoders);
 });
 
+$container->add(\Symfony\Component\Validator\Validator\ValidatorInterface::class, function () {
+    return \Symfony\Component\Validator\Validation::createValidatorBuilder()
+        ->enableAttributeMapping()
+        ->getValidator();
+});
+
 return $container;
 

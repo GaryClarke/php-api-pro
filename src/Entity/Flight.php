@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'flights')]
-class Flight
+class Flight implements EntityInterface
 {
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
