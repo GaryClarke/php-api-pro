@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Error;
 
+use App\Http\Error\Exception\ExtensibleExceptionInterface;
+use App\Http\Error\Exception\ValidationException;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -43,6 +45,8 @@ class HttpErrorHandler extends ErrorHandler
                 $problem = ProblemDetail::BAD_REQUEST;
             } elseif ($exception instanceof HttpNotImplementedException) {
                 $problem = ProblemDetail::NOT_IMPLEMENTED;
+            } elseif ($exception instanceof ValidationException) {
+                $problem = ProblemDetail::UNPROCESSABLE_CONTENT;
             }
         }
 
@@ -59,18 +63,11 @@ class HttpErrorHandler extends ErrorHandler
             'title' => $title,
             'detail' => $description,
             'instance' => $this->request->getUri()->getPath(),
-            # extensions (examples) - Use custom exceptions for these and array merge the extensions
-//            'errors' => [
-//                [
-//                    "detail" => "must be a positive integer",
-//                    "pointer" => "#/age"
-//                ],
-//                [
-//                    "detail" => "must be a positive integer",
-//                    "pointer" => "#/age"
-//                ],
-//            ]
         ];
+        # extensions (examples) - Use custom exceptions for these and array merge the extensions
+        if ($exception instanceof ExtensibleExceptionInterface) {
+            $error += $exception->getExtensions();
+        }
 
         $payload = json_encode($error, JSON_PRETTY_PRINT);
 

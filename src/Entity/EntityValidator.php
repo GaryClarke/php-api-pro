@@ -44,7 +44,7 @@ class EntityValidator
         $validationException->setErrors($validationErrors);
 
         // Throw the exception
-        dd($validationException->getErrors());
+        throw $validationException;
     }
 }
 

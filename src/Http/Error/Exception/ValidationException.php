@@ -6,7 +6,7 @@ namespace App\Http\Error\Exception;
 
 use Slim\Exception\HttpSpecializedException;
 
-class ValidationException extends HttpSpecializedException
+class ValidationException extends HttpSpecializedException implements ExtensibleExceptionInterface
 {
     protected array $errors = [];
 
@@ -26,5 +26,10 @@ class ValidationException extends HttpSpecializedException
     {
         $this->errors = $errors;
         return $this;
+    }
+
+    public function getExtensions(): array
+    {
+        return ['errors' => $this->errors];
     }
 }
