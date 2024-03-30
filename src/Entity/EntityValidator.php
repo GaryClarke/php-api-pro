@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Http\Error\Exception\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -36,13 +37,14 @@ class EntityValidator
             ];
         }
 
-        dd($validationErrors);
-
         // Create a ValidationException
+        $validationException = new ValidationException($request);
 
         // Add errors to the ValidationException
+        $validationException->setErrors($validationErrors);
 
         // Throw the exception
+        dd($validationException->getErrors());
     }
 }
 

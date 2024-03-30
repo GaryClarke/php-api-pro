@@ -11,6 +11,7 @@ enum ProblemDetail: int
     case FORBIDDEN = 403;
     case NOT_FOUND = 404;
     case METHOD_NOT_ALLOWED = 405;
+    case UNPROCESSABLE_CONTENT = 422;
     case INTERNAL_SERVER_ERROR = 500;
     case NOT_IMPLEMENTED = 501;
 
@@ -23,7 +24,8 @@ enum ProblemDetail: int
             self::NOT_FOUND => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.4',
             self::METHOD_NOT_ALLOWED => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.5.5',
             self::NOT_IMPLEMENTED => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.2',
-            self::INTERNAL_SERVER_ERROR => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1'
+            self::INTERNAL_SERVER_ERROR => 'https://datatracker.ietf.org/doc/html/rfc7231#section-6.6.1',
+            self::UNPROCESSABLE_CONTENT => 'https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content'
         };
     }
 }
