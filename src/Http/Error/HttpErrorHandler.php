@@ -33,26 +33,12 @@ class HttpErrorHandler extends ErrorHandler
             $description = $exception->getDescription();
             $title = $exception->getTitle();
 
-            if ($exception instanceof HttpNotFoundException) {
-                $problem = ProblemDetail::NOT_FOUND;
-            } elseif ($exception instanceof HttpMethodNotAllowedException) {
-                $problem = ProblemDetail::METHOD_NOT_ALLOWED;
-            } elseif ($exception instanceof HttpUnauthorizedException) {
-                $problem = ProblemDetail::UNAUTHORIZED;
-            } elseif ($exception instanceof HttpForbiddenException) {
-                $problem = ProblemDetail::FORBIDDEN;
-            } elseif ($exception instanceof HttpBadRequestException) {
-                $problem = ProblemDetail::BAD_REQUEST;
-            } elseif ($exception instanceof HttpNotImplementedException) {
-                $problem = ProblemDetail::NOT_IMPLEMENTED;
-            } elseif ($exception instanceof ValidationException) {
-                $problem = ProblemDetail::UNPROCESSABLE_CONTENT;
-            }
+            $problem = ProblemDetail::tryFrom($exception->getCode()) ?? ProblemDetail::BAD_REQUEST;
         }
 
         if (
             !($exception instanceof HttpException)
-            && ($exception instanceof Exception || $exception instanceof Throwable)
+            && ($exception instanceof Throwable)
             && $this->displayErrorDetails
         ) {
             $description = $exception->getMessage();
