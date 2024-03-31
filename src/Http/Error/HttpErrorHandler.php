@@ -6,6 +6,7 @@ namespace App\Http\Error;
 
 use App\Http\Error\Exception\ExtensibleExceptionInterface;
 use App\Http\Error\Exception\ValidationException;
+use App\Http\Middleware\ContentNegotiation\ContentType;
 use Psr\Http\Message\ResponseInterface;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Exception\HttpException;
@@ -55,11 +56,11 @@ class HttpErrorHandler extends ErrorHandler
             $error += $exception->getExtensions();
         }
 
-        $payload = json_encode($error, JSON_PRETTY_PRINT);
+        $payload = json_encode($error);
 
         $response = $this->responseFactory->createResponse($statusCode);
         $response->getBody()->write($payload);
-        $response = $response->withHeader('Content-Type', 'application/problem+json');
+        $response = $response->withHeader('Content-Type', ContentType::JSON_PROBLEM->value);
 
         return $response;
     }

@@ -7,6 +7,7 @@ namespace App\Http\Middleware\ContentNegotiation;
 enum ContentType: string
 {
     case JSON = 'application/json';
+    case JSON_PROBLEM = 'application/problem+json';
     case HTML = 'text/html';
     case XML = 'application/xml';
     case CSV = 'text/csv';
@@ -14,7 +15,7 @@ enum ContentType: string
     public function format(): string
     {
         return match ($this) {
-            self::JSON => 'json',
+            self::JSON, self::JSON_PROBLEM => 'json',
             self::HTML => 'html',
             self::XML => 'xml',
             self::CSV => 'csv',
