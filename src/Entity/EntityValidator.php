@@ -15,10 +15,10 @@ class EntityValidator
     ) {
     }
 
-    public function validate(EntityInterface $entity, ServerRequestInterface $request)
+    public function validate(EntityInterface $entity, ServerRequestInterface $request, array $groups = []): void
     {
         // Get errors array off validate()
-        $errors = $this->validator->validate($entity);
+        $errors = $this->validator->validate(value: $entity, groups: $groups);
 
         // Return if no errors
         if (count($errors) === 0) {
