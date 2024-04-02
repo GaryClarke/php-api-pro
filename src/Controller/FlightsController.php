@@ -123,10 +123,14 @@ readonly class FlightsController extends ApiController
             $flightJson,
             Flight::class,
             $request->getAttribute('content-type')->format(),
-            [AbstractNormalizer::OBJECT_TO_POPULATE => $flight]
+            [
+                AbstractNormalizer::OBJECT_TO_POPULATE => $flight,
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['number']
+            ]
         );
 
         // Validate the post data (happy path for now..save for Error Handling section)
+        $this->validator->validate($flight, $request, [Flight::UPDATE_GROUP]);
 
         // Persist
         $this->entityManager->persist($flight);
