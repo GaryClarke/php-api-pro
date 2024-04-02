@@ -25,7 +25,6 @@ class Flight implements EntityInterface
     private string $number;
 
     #[ORM\Column(type: 'string', length: 3)]
-    #[Assert\NotBlank]
     #[Assert\NotBlank(groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private string $origin;
 
