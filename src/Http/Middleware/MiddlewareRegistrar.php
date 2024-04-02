@@ -8,6 +8,7 @@ use App\Http\Error\HttpErrorHandler;
 use App\Http\Middleware\ContentNegotiation\ContentTypeMiddleware;
 use App\Http\Middleware\ContentNegotiation\ContentTypeNegotiator;
 use Middlewares\TrailingSlash;
+use Psr\Log\LoggerInterface;
 use Slim\App;
 
 /**
@@ -48,10 +49,11 @@ final readonly class MiddlewareRegistrar
 
     private function addErrorMiddleware(): void
     {
-        $errorMiddleware = $this->app->addErrorMiddleware(true, true, true);
+        $logger = $this->app->getContainer()->get(LoggerInterface::class);
+        $errorMiddleware = $this->app->addErrorMiddleware(true, true, true, $logger);
         $callableResolver = $this->app->getCallableResolver();
         $responseFactory = $this->app->getResponseFactory();
-        $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory);
+        $errorHandler = new HttpErrorHandler($callableResolver, $responseFactory, $logger);
         $errorMiddleware->setDefaultErrorHandler($errorHandler);
     }
 }
