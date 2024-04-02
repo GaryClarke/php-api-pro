@@ -52,5 +52,10 @@ return [
         'connection' => [
             'dsn' => $_ENV['DSN']
         ]
+    ],
+    'log' => [
+        'file' => APP_ROOT . '/var/app.log',
+        'level' => $_ENV['LOG_LEVEL'] ?? 'debug',
+        'name' => 'app',
     ]
 ];

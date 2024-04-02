@@ -65,5 +65,15 @@ $container->add(\Symfony\Component\Validator\Validator\ValidatorInterface::class
         ->getValidator();
 });
 
+$container->add(\Psr\Log\LoggerInterface::class, function() use ($settings) {
+    $logger = new \Monolog\Logger($settings['log']['name']);
+    $streamHandler = new \Monolog\Handler\StreamHandler(
+        $settings['log']['file'],
+        \Monolog\Level::fromName($settings['log']['level'])
+    );
+    $logger->pushHandler($streamHandler);
+    return $logger;
+});
+
 return $container;
 
