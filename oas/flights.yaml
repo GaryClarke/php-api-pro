@@ -100,7 +100,7 @@ paths:
         '400':
           description: Invalid input
         '422':
-          description: Validation exception
+          $ref: '#/components/responses/ValidationErrorResponse'
 
   /flights/{number}:
 
@@ -191,7 +191,7 @@ paths:
         '404':
           description: Flight not found
         '422':
-          description: Validation exception
+          $ref: '#/components/responses/ValidationErrorResponse'
 
     #--------------- patchFlight ---------------
     patch:
@@ -229,7 +229,7 @@ paths:
         '404':
           description: Flight not found
         '422':
-          description: Validation exception
+          $ref: '#/components/responses/ValidationErrorResponse'
 
   /reservations:
 
@@ -786,6 +786,48 @@ components:
           type: integer
           example: 20
           description: The number of items per page
+
+  responses:
+
+    #--------------- ValidationErrorResponse ---------------
+
+    ValidationErrorResponse:
+      description: Validation exception
+      content:
+        application/problem+json:
+          schema:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "https://www.rfc-editor.org/rfc/rfc9110.html#name-422-unprocessable-content"
+              title:
+                type: string
+                example: "422 Unprocessable content"
+              detail:
+                type: string
+                example: "The request could not be processed by this server"
+              instance:
+                type: string
+                example: "/flights"
+              errors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    property:
+                      type: string
+                      example: "origin"
+                    message:
+                      type: string
+                      example: "This value should not be blank."
+            required:
+              - type
+              - title
+              - detail
+              - instance
+              - errors
+
 
   securitySchemes:
 
