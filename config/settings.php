@@ -29,6 +29,8 @@ return [
         'api_routes' => APP_ROOT . '/routes/api.php',
 
         'middleware_registration' => APP_ROOT . '/middleware/registration.php',
+
+        'maintenance_mode' => $_ENV['MAINTENANCE_MODE'] ?? false,
     ],
     'doctrine' => [
         // Enables or disables Doctrine metadata caching

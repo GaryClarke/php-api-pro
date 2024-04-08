@@ -7,6 +7,7 @@ namespace App\Http\Middleware;
 use App\Http\Error\HttpErrorHandler;
 use App\Http\Middleware\ContentNegotiation\ContentTypeMiddleware;
 use App\Http\Middleware\ContentNegotiation\ContentTypeNegotiator;
+use App\Http\Middleware\Utility\MaintenanceModeMiddleware;
 use Middlewares\TrailingSlash;
 use Psr\Log\LoggerInterface;
 use Slim\App;
@@ -33,9 +34,11 @@ final readonly class MiddlewareRegistrar
     private function registerCustomMiddleware(): void
     {
         $app = $this->app;
+        $container = $app->getContainer();
 
         // .. register custom middleware here
         $app->add(new ContentTypeMiddleware(new ContentTypeNegotiator()));
+        $app->add(new MaintenanceModeMiddleware($container->get('maintenance_mode')));
     }
 
     private function registerDefaultMiddleware(): void
