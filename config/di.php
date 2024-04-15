@@ -1,4 +1,4 @@
-<?php
+<?php // config/di.php
 
 use Doctrine\DBAL\DriverManager;
 use Doctrine\DBAL\Tools\DsnParser;
@@ -61,6 +61,9 @@ $container->add(\Symfony\Component\Serializer\SerializerInterface::class, functi
 
     return new \Symfony\Component\Serializer\Serializer($normalizers, $encoders);
 });
+
+$container->addShared(\App\Serializer\Serializer::class)
+    ->addArguments([\Symfony\Component\Serializer\SerializerInterface::class]);
 
 $container->add(\Symfony\Component\Validator\Validator\ValidatorInterface::class, function () {
     return \Symfony\Component\Validator\Validation::createValidatorBuilder()

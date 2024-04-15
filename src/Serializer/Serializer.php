@@ -14,12 +14,12 @@ class Serializer implements SerializerInterface
     {
     }
 
-    public function serialize(mixed $data, string $format, array $context = []): string
+    public function serialize(mixed $data, ?string $format = null, array $context = []): string
     {
         return $this->serializer->serialize($data, $format ?? $this->format, $context);
     }
 
-    public function deserialize(mixed $data, string $type, string $format, array $context = []): mixed
+    public function deserialize(mixed $data, string $type, ?string $format = null, array $context = []): mixed
     {
         return $this->serializer->deserialize($data ,$type, $format ?? $this->format, $context);
     }

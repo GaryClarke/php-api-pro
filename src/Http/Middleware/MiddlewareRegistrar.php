@@ -1,4 +1,4 @@
-<?php
+<?php // src/Http/Middleware/MiddlewareRegistrar.php
 
 declare(strict_types=1);
 
@@ -8,6 +8,7 @@ use App\Http\Error\HttpErrorHandler;
 use App\Http\Middleware\ContentNegotiation\ContentTypeMiddleware;
 use App\Http\Middleware\ContentNegotiation\ContentTypeNegotiator;
 use App\Http\Middleware\Utility\MaintenanceModeMiddleware;
+use App\Serializer\Serializer;
 use Middlewares\TrailingSlash;
 use Psr\Log\LoggerInterface;
 use Slim\App;
@@ -36,8 +37,9 @@ final readonly class MiddlewareRegistrar
         $app = $this->app;
         $container = $app->getContainer();
 
+        $serializer = $container->get(Serializer::class);
         // .. register custom middleware here
-        $app->add(new ContentTypeMiddleware(new ContentTypeNegotiator()));
+        $app->add(new ContentTypeMiddleware(new ContentTypeNegotiator($serializer)));
         $app->add(new MaintenanceModeMiddleware($container->get('maintenance_mode')));
     }
 

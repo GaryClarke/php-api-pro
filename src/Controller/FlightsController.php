@@ -24,8 +24,7 @@ readonly class FlightsController extends ApiController
 
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
-            ['flights' => $flights],
-            $request->getAttribute('content-type')->format()
+            ['flights' => $flights]
         );
 
         // Return the response containing the flights
@@ -62,8 +61,7 @@ readonly class FlightsController extends ApiController
         // deserialize into a flight
         $flight = $this->serializer->deserialize(
             $flightJson,
-            Flight::class,
-            $request->getAttribute('content-type')->format()
+            Flight::class
         );
 
         // Validate the post data (happy path for now..save for Error Handling section)
@@ -75,8 +73,7 @@ readonly class FlightsController extends ApiController
 
         // Serialize the new flight
         $jsonFlight = $this->serializer->serialize(
-            ['flight' => $flight],
-            $request->getAttribute('content-type')->format()
+            ['flight' => $flight]
         );
 
         // Add the flight to the response body
@@ -120,10 +117,9 @@ readonly class FlightsController extends ApiController
         $flightJson = $request->getBody()->getContents();
 
         $flight = $this->serializer->deserialize(
-            $flightJson,
-            Flight::class,
-            $request->getAttribute('content-type')->format(),
-            [
+            data: $flightJson,
+            type: Flight::class,
+            context: [
                 AbstractNormalizer::OBJECT_TO_POPULATE => $flight,
                 AbstractNormalizer::IGNORED_ATTRIBUTES => ['number']
             ]
@@ -138,8 +134,7 @@ readonly class FlightsController extends ApiController
 
         // Serialize the updated flight
         $jsonFlight = $this->serializer->serialize(
-            ['flight' => $flight],
-            $request->getAttribute('content-type')->format()
+            ['flight' => $flight]
         );
 
         // Add the flight to the response body
