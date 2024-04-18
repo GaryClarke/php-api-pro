@@ -74,6 +74,38 @@ $app->group('/passengers', function (\Slim\Routing\RouteCollectorProxy $group) {
     );
 });
 
+$app->group('', function (\Slim\Routing\RouteCollectorProxy $group) {
+    // GET collection /flights/<number>/reservations
+    $group->get(
+        '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}/reservations',
+        [\App\Controller\ReservationsController::class, 'index']
+    );
+
+    // POST /flights/<number>/reservations
+    $group->post(
+        '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}/reservations',
+        [\App\Controller\ReservationsController::class, 'store']
+    );
+
+    // GET item, DELETE, PUT, PATCH
+    // reservations/<reference>
+    $group->get(
+        '/reservations/{reference:[0-9]+JF[0-9]{4}}',
+        [\App\Controller\ReservationsController::class, 'show']
+    );
+
+    $group->delete(
+        '/reservations/{reference:[0-9]+JF[0-9]{4}}',
+        [\App\Controller\ReservationsController::class, 'destroy']
+    );
+
+    $group->map(
+        ['PUT', 'PATCH'],
+        '/reservations/{reference:[0-9]+JF[0-9]{4}}',
+        [\App\Controller\ReservationsController::class, 'update']
+    );
+});
+
 
 
 
