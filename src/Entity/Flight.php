@@ -20,7 +20,7 @@ class Flight implements EntityInterface
     #[ORM\GeneratedValue]
     private ?int $id = null;
 
-    #[ORM\Column(type: 'string', length: 15)]
+    #[ORM\Column(type: 'string', length: 20)]
     #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
     private string $number;
 

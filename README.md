@@ -1,16 +1,24 @@
-<h1><a href="https://www.garyclarke.tech/p/php-api-pro">PHP API Pro</a></h1>
+## PHP API Pro
+[GaryClarkeTech](https://garyclarke.tech)
+---
 
-<h4>Created by <a href="https://www.youtube.com/@GaryClarkeTech"> Gary Clarke</a></h4>
+This is the repository which accompanies [PHP API Pro](https://www.garyclarke.tech/p/php-api-pro). A comprehensive step-by-step video course guiding you through the process of creating awesome APIs in PHP.
 
-<hr>
+### Setup
 
-This is the repository which accompanies <b>PHP API Pro</b>. A comprehensive step-by-step video course guiding you through the process of creating awesome APIs in PHP.
+In the course, I use [Docker](https://www.garyclarke.tech/p/learn-docker-and-php) to create my development environment and created custom images especially for this course. 
+It is a very simple setup consisting of PHP, Nginx, and MariaDB (MySQL) containers. Spin it up with these two commands.
 
+```shell
+docker compose up -d
+docker compose exec app composer install
+```
+This will give you the exact same setup as me with the exact same versions of all the dependencies. This will make it much easier for me to help you, should you encounter problems.
 
-To get started, all you need to do is:
+### Branches
+Each individual lesson has a corresponding branch in this repo. There is a link to the branch in the lesson text e.g.
 
-Run <code>composer install</code>
+Branch: [https://github.com/GaryClarke/php-api-pro/tree/3-phpstan-composer-script](https://github.com/GaryClarke/php-api-pro/tree/3-phpstan-composer-script)
 
-Followed by <code>docker compose up -d</code> ..this will give you a nice starting setup consisting of Nginx web server, PHP, and MariaDB.
+Happy Coding!
 
-Happy coding!
