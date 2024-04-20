@@ -23,6 +23,8 @@ Then install all the composer dependencies. In order to ensure you have all the 
 docker compose exec app composer install
 ```
 
+---
+
 ### Connect to the database
 
 Credentials for connecting to the DB can be found in the .env file...
@@ -49,4 +51,26 @@ You can use those credentials to connect your DB admin tool of choice. I use [Ta
 
 You now have all the configuration you need to follow along.
 
-GLHF
+---
+
+### Enroll in the Full Course
+The YouTube edit is only a sample section of the full course. You can enroll in the full course here:
+[https://www.garyclarke.tech/p/php-api-pro](https://www.garyclarke.tech/p/php-api-pro) 
+
+The full course includes:
+* API Fundamentals
+* REST Operations
+* API Design and Documentation
+* Error Handling
+* Response Content
+* Performance and Optimization
+* API Security
+* API Versioning
+* API Testing
+* Consuming APIs
+* Other API Types
+
+Get a 20% discount using this coupon code: GCTREPO20
+
+Happy Coding!
+
