@@ -45,7 +45,7 @@ db:
 
 You can use those credentials to connect your DB admin tool of choice. I use [TablePlus](https://tableplus.com/) in the video.
 
-![Alt text](doc/flights-api.png "Optional Title")
+![DB connection creds](doc/flights-api.png "Connecting to the database")
 
 You now have all the configuration you need to follow along.
 
