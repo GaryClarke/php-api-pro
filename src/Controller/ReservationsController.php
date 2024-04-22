@@ -23,7 +23,7 @@ readonly class ReservationsController extends ApiController
         parent::__construct($entityManager, $serializer, $validator);
     }
 
-    public function index(Request $request, Response $response, string $number)
+    public function index(Request $request, Response $response, string $number): Response
     {
         // Retrieve active reservations for flight number from DB
         $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber($number);
