@@ -9,7 +9,7 @@ use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[ORM\Entity]
+#[ORM\Entity(repositoryClass: \App\Repository\ReservationRepository::class)]
 #[ORM\Table(name: 'reservations')]
 class Reservation implements EntityInterface
 {
