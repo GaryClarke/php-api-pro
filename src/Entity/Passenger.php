@@ -79,9 +79,9 @@ class Passenger implements EntityInterface
         $this->passportNumber = $passportNumber;
     }
 
-    public function getDateOfBirth(): DateTimeInterface
+    public function getDateOfBirth(): string
     {
-        return $this->dateOfBirth;
+        return $this->dateOfBirth->format('Y-m-d');
     }
 
     public function setDateOfBirth(string|DateTimeImmutable $dateOfBirth): void

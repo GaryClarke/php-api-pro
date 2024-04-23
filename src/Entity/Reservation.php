@@ -13,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: 'reservations')]
 class Reservation implements EntityInterface
 {
+    public const CANCEL_GROUP = 'cancel';
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
@@ -40,6 +42,7 @@ class Reservation implements EntityInterface
     private DateTimeInterface $createdAt;
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    #[Assert\NotBlank(groups: [self::CANCEL_GROUP])]
     private ?DateTimeInterface $cancelledAt = null;
 
     public function __construct()
@@ -118,7 +121,7 @@ class Reservation implements EntityInterface
 
     public function setCancelledAt(string|DateTimeImmutable $cancelledAt): void
     {
-        if (is_string($createdAt)) {
+        if (is_string($cancelledAt)) {
             $cancelledAt = new DateTimeImmutable($cancelledAt);
         }
 

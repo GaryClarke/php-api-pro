@@ -93,4 +93,35 @@ readonly class ReservationsController extends ApiController
         // Return the response
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
     }
+
+    public function destroy(Request $request, Response $response, string $reference): Response
+    {
+        return $this->cancel($request, $response, $reference);
+    }
+
+    private function cancel(Request $request, Response $response, string $reference): Response
+    {
+        // Find the reservation by reference
+        /** @var Reservation $reservation */
+        $reservation = $this->reservationRepository
+            ->findOneBy(['reference' => $reference]);
+
+        // Handle not found
+        if (!$reservation) {
+            throw new HttpNotFoundException($request, "Reservation $reference not found.");
+        }
+
+        // Set cancelledAt
+        $reservation->setCancelledAt(new \DateTimeImmutable());
+
+        // Validate only cancellation fields
+        $this->validator->validate($reservation, $request, [Reservation::CANCEL_GROUP]);
+
+        // Persist changes
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
+        // Return no content response
+        return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
 }
