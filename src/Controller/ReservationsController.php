@@ -94,6 +94,28 @@ readonly class ReservationsController extends ApiController
         return $response->withStatus(StatusCodeInterface::STATUS_CREATED);
     }
 
+    public function show(Request $request, Response $response, string $reference): Response
+    {
+        // Find using repository
+        $reservation = $this->reservationRepository->findByReference($reference);
+
+        // Exit if not found
+        if (!$reservation) {
+            throw new HttpNotFoundException($request, "Reservation $reference not found.");
+        }
+
+        // Serialize
+        $jsonReservation = $this->serializer->serialize(
+            ['reservation' => $reservation]
+        );
+
+        // Write to body
+        $response->getBody()->write($jsonReservation);
+
+        // Return a cacheable response
+        return $response->withHeader('Cache-Control', 'public, max-age=600');
+    }
+
     public function destroy(Request $request, Response $response, string $reference): Response
     {
         return $this->cancel($request, $response, $reference);

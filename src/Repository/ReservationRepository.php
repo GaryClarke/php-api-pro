@@ -20,4 +20,17 @@ class ReservationRepository extends EntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByReference(string $reference): ?array
+    {
+        return $this->createQueryBuilder('r')
+            ->select('r.reference, r.seatNumber, r.travelClass, r.createdAt, f.number AS flightNumber, p.reference AS passengerReference')
+            ->leftJoin('r.flight', 'f')
+            ->leftJoin('r.passenger', 'p')
+            ->where('r.reference = :reference') // Filter by reservation reference
+            ->setParameter('reference', $reference) // Bind the reservation reference parameter
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
 }
