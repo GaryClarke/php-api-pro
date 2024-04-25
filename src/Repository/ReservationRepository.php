@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\Reservation;
 use Doctrine\ORM\EntityRepository;
 
 class ReservationRepository extends EntityRepository
@@ -21,7 +22,17 @@ class ReservationRepository extends EntityRepository
             ->getResult();
     }
 
-    public function findByReference(string $reference): ?array
+    public function findByReference(string $reference): ?Reservation
+    {
+        return $this->createQueryBuilder('r')
+            ->where('r.reference = :reference') // Filter by reservation reference
+            ->setParameter('reference', $reference) // Bind the reservation reference parameter
+            ->getQuery()
+            ->setMaxResults(1)
+            ->getOneOrNullResult();
+    }
+
+    public function findArrayByReference(string $reference): ?array
     {
         return $this->createQueryBuilder('r')
             ->select('r.reference, r.seatNumber, r.travelClass, r.createdAt, f.number AS flightNumber, p.reference AS passengerReference')

@@ -15,6 +15,7 @@ use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpNotFoundException;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 readonly class ReservationsController extends ApiController
 {
@@ -97,7 +98,7 @@ readonly class ReservationsController extends ApiController
     public function show(Request $request, Response $response, string $reference): Response
     {
         // Find using repository
-        $reservation = $this->reservationRepository->findByReference($reference);
+        $reservation = $this->reservationRepository->findArrayByReference($reference);
 
         // Exit if not found
         if (!$reservation) {
@@ -145,5 +146,54 @@ readonly class ReservationsController extends ApiController
 
         // Return no content response
         return $response->withStatus(StatusCodeInterface::STATUS_NO_CONTENT);
+    }
+
+    public function update(Request $request, Response $response, string $reference): Response
+    {
+        // Retrieve the reservation
+        $reservation = $this->reservationRepository->findByReference($reference);
+
+        // Exit if not found
+        if (!$reservation) {
+            throw new HttpNotFoundException($request, "Reservation $reference not found");
+        }
+
+        // Grab the post data (body content)
+        $reservationJson = $request->getBody()->getContents();
+
+        // Deserialize into a Reservation entity object
+        // (Only the fields eligible for update)
+        $reservation = $this->serializer->deserialize(
+            data: $reservationJson,
+            type: Reservation::class,
+            context: [
+                AbstractNormalizer::OBJECT_TO_POPULATE => $reservation,
+                AbstractNormalizer::IGNORED_ATTRIBUTES => [
+                    'reference', 'flight', 'passenger', 'createdAt', 'cancelledAt'
+                ]
+            ]
+        );
+
+        // Validate
+        $this->validator->validate($reservation, $request);
+
+        // Persist
+        $this->entityManager->persist($reservation);
+        $this->entityManager->flush();
+
+        // Serialize the updated reservation
+        // (Only the fields we want in the response content)
+        $jsonReservation = $this->serializer->serialize(
+            data: ['reservation' => $reservation],
+            context: [
+                AbstractNormalizer::IGNORED_ATTRIBUTES => ['flight', 'passenger', 'cancelledAt']
+            ]
+        );
+
+        // Add to the response body
+        $response->getBody()->write($jsonReservation);
+
+        // Send success (200) response
+        return $response->withStatus(StatusCodeInterface::STATUS_OK);
     }
 }
