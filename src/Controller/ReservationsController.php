@@ -31,8 +31,16 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
+        $queryParams = $request->getQueryParams();
+        $page = (int) $queryParams['page'] ?? 1;
+        $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
+
         // Retrieve active reservations for flight number from DB
-        $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber($number);
+        $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber(
+            $number,
+            $page,
+            $itemsPerPage
+        );
 
         // Serialize reservations under a reservations key
         $jsonReservations = $this->serializer->serialize(
