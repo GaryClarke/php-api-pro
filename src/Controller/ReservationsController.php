@@ -35,6 +35,19 @@ readonly class ReservationsController extends ApiController
         $page = (int) $queryParams['page'] ?? 1;
         $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
 
+        $totalrecords = 100;
+        $totalPages = (int) ceil($totalrecords / $itemsPerPage);
+
+        $path = $request->getUri()->getPath();
+
+        $links = [
+            'self' => "$path?page=$page&itemsPerPage=$itemsPerPage",
+            'first' => "$path?page=1&itemsPerPage=$itemsPerPage",
+            'last' => "$path?page=$totalPages&itemsPerPage=$itemsPerPage",
+            'prev' => $page > 1 ? "$path?page=" . ($page - 1) . "&itemsPerPage=$itemsPerPage" : null,
+            'next' => $page < $totalPages ? "$path?page=" . ($page + 1) . "&itemsPerPage=$itemsPerPage" : null
+        ];
+
         // Retrieve active reservations for flight number from DB
         $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber(
             $number,
@@ -44,7 +57,10 @@ readonly class ReservationsController extends ApiController
 
         // Serialize reservations under a reservations key
         $jsonReservations = $this->serializer->serialize(
-            ['reservations' => $reservations]
+            [
+                'reservations' => $reservations,
+                'links' => $links
+            ]
         );
 
         // Write the reservations to the response body
