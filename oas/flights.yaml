@@ -272,7 +272,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/ReservationResponse'
                   links:
-                    $ref: '#/components/schemas/Links'
+                    $ref: '#/components/schemas/ReservationLinks'
                   meta:
                     $ref: '#/components/schemas/Meta'
 
@@ -774,8 +774,8 @@ components:
             - reference
         - $ref: '#/components/schemas/Passenger'
 
-    #--------------- Links ---------------
-    Links:
+    #--------------- FlightLinks ---------------
+    FlightLinks:
       type: object
       properties:
         self:
@@ -803,6 +803,38 @@ components:
           type: string
           format: uri
           example: /flights?page=5
+          description: The link to the last page of results
+
+    #--------------- ReservationLinks ---------------
+
+    ReservationLinks:
+      type: object
+      properties:
+        self:
+          type: string
+          format: uri
+          example: /flights/{number}/reservations?page=2
+          description: The link to the current page of results
+        # Pagination
+        first:
+          type: string
+          format: uri
+          example: /flights/{number}/reservations?page=1
+          description: The link to the first page of results
+        prev:
+          type: string
+          format: uri
+          example: /flights/{number}/reservations?page=1
+          description: The link to the previous page of results, if any
+        next:
+          type: string
+          format: uri
+          example: /flights/{number}/reservations?page=3
+          description: The link to the next page of results, if any
+        last:
+          type: string
+          format: uri
+          example: /flights/{number}/reservations?page=5
           description: The link to the last page of results
 
     #--------------- Meta ---------------
