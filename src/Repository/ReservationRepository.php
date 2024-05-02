@@ -9,8 +9,11 @@ use Doctrine\ORM\EntityRepository;
 
 class ReservationRepository extends EntityRepository
 {
-    public function findActiveReservationsByFlightNumber(string $flightNumber): array
-    {
+    public function findActiveReservationsByFlightNumber(
+        string $flightNumber,
+        int $page = 1,
+        int $limit = 10
+    ): array {
         return $this->createQueryBuilder('r')
             ->select('r.reference, r.seatNumber, r.travelClass, r.createdAt, f.number AS flightNumber, p.reference AS passengerReference')
             ->leftJoin('r.flight', 'f')
@@ -18,6 +21,10 @@ class ReservationRepository extends EntityRepository
             ->where('r.cancelledAt IS NULL')
             ->andWhere('f.number = :flightNumber')
             ->setParameter('flightNumber', $flightNumber)
+            // Calculate and set the offset (first record) ($page - 1) * $limit
+            // Set limit (items per page)
+            ->setFirstResult((($page - 1) * $limit))
+            ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
