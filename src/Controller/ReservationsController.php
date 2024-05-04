@@ -8,6 +8,7 @@ use App\Entity\EntityValidator;
 use App\Entity\Flight;
 use App\Entity\Passenger;
 use App\Entity\Reservation;
+use App\Pagination\PaginationMetadata;
 use App\Repository\ReservationRepository;
 use App\Serializer\Serializer;
 use Doctrine\ORM\EntityManagerInterface;
@@ -31,48 +32,24 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
-        $queryParams = $request->getQueryParams();
-        $page = (int) $queryParams['page'] ?? 1;
-        $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
-
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
-        $totalPages = (int) ceil($totalItems / $itemsPerPage);
-        $path = $request->getUri()->getPath();
 
-        $links = [
-            'self' => "$path?page=$page&itemsPerPage=$itemsPerPage",
-            'first' => "$path?page=1&itemsPerPage=$itemsPerPage",
-            'last' => "$path?page=$totalPages&itemsPerPage=$itemsPerPage",
-            'prev' => $page > 1 ? "$path?page=" . ($page - 1) . "&itemsPerPage=$itemsPerPage" : null,
-            'next' => $page < $totalPages ? "$path?page=" . ($page + 1) . "&itemsPerPage=$itemsPerPage" : null
-        ];
-
-        // "meta": {
-        //    "totalItems": 100,
-        //    "totalPages": 5,
-        //    "currentPage": 1,
-        //    "itemsPerPage": 20
-        //  }
-        $meta = [
-            'totalItems' => $totalItems,
-            'totalPages' => $totalPages,
-            'currentPage' => $page,
-            'itemsPerPage' => $itemsPerPage
-        ];
+        /** @var PaginationMetadata $paginationMetadata */
+        $paginationMetadata = $this->paginationMetadataFactory->create($request, $totalItems);
 
         // Retrieve active reservations for flight number from DB
         $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber(
             $number,
-            $page,
-            $itemsPerPage
+            $paginationMetadata->page,
+            $paginationMetadata->itemsPerPage
         );
 
         // Serialize reservations under a reservations key
         $jsonReservations = $this->serializer->serialize(
             [
                 'reservations' => $reservations,
-                'links' => $links,
-                'meta' => $meta
+                'links' => $paginationMetadata->links,
+                'meta' => $paginationMetadata->meta
             ]
         );
 
