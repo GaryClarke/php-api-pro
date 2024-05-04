@@ -35,9 +35,8 @@ readonly class ReservationsController extends ApiController
         $page = (int) $queryParams['page'] ?? 1;
         $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
 
-        $totalrecords = 100;
+        $totalrecords = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
         $totalPages = (int) ceil($totalrecords / $itemsPerPage);
-
         $path = $request->getUri()->getPath();
 
         $links = [

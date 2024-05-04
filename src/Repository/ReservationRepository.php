@@ -29,6 +29,20 @@ class ReservationRepository extends EntityRepository
             ->getResult();
     }
 
+    public function countActiveReservationsByFlightNumber(string $flightNumber): int
+    {
+        $count = $this->createQueryBuilder('r')
+            ->select('count(r.id)')
+            ->leftJoin('r.flight', 'f')
+            ->where('r.cancelledAt IS NULL')
+            ->andWhere('f.number = :flightNumber')
+            ->setParameter('flightNumber', $flightNumber)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return (int) $count;
+    }
+
     public function findByReference(string $reference): ?Reservation
     {
         return $this->createQueryBuilder('r')
