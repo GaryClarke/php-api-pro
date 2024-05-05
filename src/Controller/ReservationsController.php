@@ -24,8 +24,7 @@ readonly class ReservationsController extends ApiController
         Serializer $serializer,
         EntityValidator $validator,
         private ReservationRepository $reservationRepository
-    )
-    {
+    ) {
         parent::__construct($entityManager, $serializer, $validator);
     }
 
