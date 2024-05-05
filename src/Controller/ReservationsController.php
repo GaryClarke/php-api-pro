@@ -30,11 +30,12 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
-        $queryParams = $request->getQueryParams();
-        $page = (int) $queryParams['page'] ?? 1;
-        $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
-
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
+
+        $queryParams = $request->getQueryParams();
+        $page = (int) ($queryParams['page'] ?? 1);
+        $itemsPerPage = (int) ($queryParams['itemsPerPage'] ?? 10);
+
         $totalPages = (int) ceil($totalItems / $itemsPerPage);
         $path = $request->getUri()->getPath();
 
