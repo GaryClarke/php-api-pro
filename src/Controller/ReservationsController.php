@@ -47,12 +47,6 @@ readonly class ReservationsController extends ApiController
             'next' => $page < $totalPages ? "$path?page=" . ($page + 1) . "&itemsPerPage=$itemsPerPage" : null
         ];
 
-        // "meta": {
-        //    "totalItems": 100,
-        //    "totalPages": 5,
-        //    "currentPage": 1,
-        //    "itemsPerPage": 20
-        //  }
         $meta = [
             'totalItems' => $totalItems,
             'totalPages' => $totalPages,
