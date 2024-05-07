@@ -55,12 +55,18 @@ readonly class ReservationsController extends ApiController
             'itemsPerPage' => $itemsPerPage
         ];
 
+        $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber(
+            $number,
+            $page,
+            $itemsPerPage
+        );
+
         // Serialize reservations under a reservations key
         $jsonReservations = $this->serializer->serialize(
             [
                 'reservations' => $reservations,
-                'links' => $paginationMetadata->links,
-                'meta' => $paginationMetadata->meta
+                'links' => $links,
+                'meta' => $meta
             ]
         );
 
