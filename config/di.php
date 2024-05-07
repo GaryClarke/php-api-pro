@@ -45,6 +45,11 @@ $container->addShared(\App\Repository\ReservationRepository::class, function () 
     return $entityManager->getRepository(\App\Entity\Reservation::class);
 });
 
+$container->addShared(\App\Repository\FlightRepository::class, function () use ($container) {
+    $entityManager = $container->get(EntityManagerInterface::class);
+    return $entityManager->getRepository(\App\Entity\Flight::class);
+});
+
 $container->add(\Symfony\Component\Serializer\SerializerInterface::class, function() {
     $encoders = [
         new \Symfony\Component\Serializer\Encoder\XmlEncoder(),

@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\EntityValidator;
 use App\Entity\Flight;
+use App\Pagination\PaginationMetadataFactory;
+use App\Repository\FlightRepository;
+use App\Serializer\Serializer;
+use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
@@ -12,19 +17,35 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
 readonly class FlightsController extends ApiController
 {
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        Serializer $serializer,
+        EntityValidator $validator,
+        private FlightRepository $flightRepository
+    )
+    {
+        parent::__construct($entityManager, $serializer, $validator);
+    }
+
     public function index(Request $request, Response $response): Response
     {
-        // Retrieve the flights
-        $flights = $this->entityManager->getRepository(Flight::class)
-            ->findAll();
+        $totalItems = $this->entityManager->getRepository(Flight::class)->count([]);
 
-        if(!$flights) {
-            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
-        }
+        $paginationMetadata = PaginationMetadataFactory::create($request, $totalItems);
+
+        // Retrieve the flights
+        $flights = $this->flightRepository->findFlights(
+            $paginationMetadata->page,
+            $paginationMetadata->itemsPerPage
+        );
 
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
-            ['flights' => $flights]
+            [
+                'flights' => $flights,
+                'links' => $paginationMetadata->links,
+                'meta' => $paginationMetadata->meta
+            ]
         );
 
         // Return the response containing the flights
