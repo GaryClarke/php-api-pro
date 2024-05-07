@@ -32,17 +32,28 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
+        $queryParams = $request->getQueryParams();
+        $page = (int) $queryParams['page'] ?? 1;
+        $itemsPerPage = (int) $queryParams['itemsPerPage'] ?? 10;
+
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
+        $totalPages = (int) ceil($totalItems / $itemsPerPage);
+        $path = $request->getUri()->getPath();
 
-        /** @var PaginationMetadata $paginationMetadata */
-        $paginationMetadata = $this->paginationMetadataFactory->create($request, $totalItems);
+        $links = [
+            'self' => "$path?page=$page&itemsPerPage=$itemsPerPage",
+            'first' => "$path?page=1&itemsPerPage=$itemsPerPage",
+            'last' => "$path?page=$totalPages&itemsPerPage=$itemsPerPage",
+            'prev' => $page > 1 ? "$path?page=" . ($page - 1) . "&itemsPerPage=$itemsPerPage" : null,
+            'next' => $page < $totalPages ? "$path?page=" . ($page + 1) . "&itemsPerPage=$itemsPerPage" : null
+        ];
 
-        // Retrieve active reservations for flight number from DB
-        $reservations = $this->reservationRepository->findActiveReservationsByFlightNumber(
-            $number,
-            $paginationMetadata->page,
-            $paginationMetadata->itemsPerPage
-        );
+        $meta = [
+            'totalItems' => $totalItems,
+            'totalPages' => $totalPages,
+            'currentPage' => $page,
+            'itemsPerPage' => $itemsPerPage
+        ];
 
         // Serialize reservations under a reservations key
         $jsonReservations = $this->serializer->serialize(
