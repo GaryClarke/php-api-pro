@@ -31,10 +31,6 @@ readonly class FlightsController extends ApiController
         // Retrieve the flights
         $flights = $this->flightRepository->findFlights();
 
-        if(!$flights) {
-            return $response->withStatus(StatusCodeInterface::STATUS_NOT_FOUND);
-        }
-
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
             ['flights' => $flights]
