@@ -39,6 +39,8 @@ readonly class FlightsController extends ApiController
             $paginationMetadata->itemsPerPage
         );
 
+        dd($flights);
+
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(
             [

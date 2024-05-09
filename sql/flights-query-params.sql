@@ -1,0 +1,3 @@
+INSERT INTO `flights-api`.`flights` (`id`, `number`, `origin`, `destination`, `departure_time`, `arrival_time`) VALUES (DEFAULT, 'JF1001-20250102', 'ABC', 'DEF', '2025-01-02 08:00:00', '2025-01-02 10:00:00');
+INSERT INTO `flights-api`.`flights` (`id`, `number`, `origin`, `destination`, `departure_time`, `arrival_time`) VALUES (DEFAULT, 'JF1010-20250110', 'ABC', 'FGH', '2025-01-01 17:00:00', '2025-01-01 19:30:00');
+INSERT INTO `flights-api`.`flights` (`id`, `number`, `origin`, `destination`, `departure_time`, `arrival_time`) VALUES (DEFAULT, 'JF1001-20250102', 'ABC', 'DEF', '2025-01-03 08:00:00', '2025-01-03 10:00:00');
