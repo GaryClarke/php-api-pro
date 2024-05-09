@@ -33,13 +33,14 @@ readonly class FlightsController extends ApiController
 
         $paginationMetadata = PaginationMetadataFactory::create($request, $totalItems);
 
+        $filters = $request->getQueryParams();
+
         // Retrieve the flights
         $flights = $this->flightRepository->findFlights(
             $paginationMetadata->page,
-            $paginationMetadata->itemsPerPage
+            $paginationMetadata->itemsPerPage,
+            $filters
         );
-
-        dd($flights);
 
         // Serialize the flights
         $jsonFlights = $this->serializer->serialize(

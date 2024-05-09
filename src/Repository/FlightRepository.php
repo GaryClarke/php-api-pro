@@ -12,7 +12,7 @@ class FlightRepository extends EntityRepository
     public function findFlights(
         int $page = 1,
         int $limit = 10,
-        array $filters = ['origin' => 'ABC', 'destination' => 'DEF']
+        array $filters = []
     )
     {
         $qb = $this->createQueryBuilder('f');
