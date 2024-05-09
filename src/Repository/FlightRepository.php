@@ -25,6 +25,16 @@ class FlightRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
+    public function countFilteredFlights(array $filters = []): int
+    {
+        $qb = $this->createQueryBuilder('f')
+            ->select('count(f.id)');
+
+        $this->applyFilters($qb, $filters);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
     private function applyFilters(QueryBuilder $qb, array $filters): void
     {
         // Filter by origin if provided

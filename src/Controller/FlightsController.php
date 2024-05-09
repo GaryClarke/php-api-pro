@@ -29,11 +29,11 @@ readonly class FlightsController extends ApiController
 
     public function index(Request $request, Response $response): Response
     {
-        $totalItems = $this->entityManager->getRepository(Flight::class)->count([]);
+        $filters = $request->getQueryParams();
+
+        $totalItems = $this->flightRepository->countFilteredFlights($filters);
 
         $paginationMetadata = PaginationMetadataFactory::create($request, $totalItems);
-
-        $filters = $request->getQueryParams();
 
         // Retrieve the flights
         $flights = $this->flightRepository->findFlights(
