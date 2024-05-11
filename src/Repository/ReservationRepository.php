@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Repository\QueryUtils\Sort;
 use Doctrine\ORM\EntityRepository;
 
 class ReservationRepository extends EntityRepository
@@ -12,21 +13,31 @@ class ReservationRepository extends EntityRepository
     public function findActiveReservationsByFlightNumber(
         string $flightNumber,
         int $page = 1,
-        int $limit = 10
+        int $limit = 10,
+        $filters = []
     ): array {
-        return $this->createQueryBuilder('r')
-            ->select('r.reference, r.seatNumber, r.travelClass, r.createdAt, f.number AS flightNumber, p.reference AS passengerReference')
-            ->leftJoin('r.flight', 'f')
-            ->leftJoin('r.passenger', 'p')
-            ->where('r.cancelledAt IS NULL')
-            ->andWhere('f.number = :flightNumber')
-            ->setParameter('flightNumber', $flightNumber)
-            // Calculate and set the offset (first record) ($page - 1) * $limit
-            // Set limit (items per page)
-            ->setFirstResult((($page - 1) * $limit))
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+        $tableName = 'reservations';
+
+        $qb = $this->createQueryBuilder($tableName);
+
+        $qb->select("$tableName.reference, $tableName.seatNumber, $tableName.travelClass, $tableName.createdAt, f.number AS flightNumber, p.reference AS passengerReference")
+            ->leftJoin("$tableName.flight", "f")
+            ->leftJoin("$tableName.passenger", "p")
+            ->where("$tableName.cancelledAt IS NULL")
+            ->andWhere('f.number = :flightNumber') // Filter by flight number
+            ->setParameter('flightNumber', $flightNumber); // Bind the flight number parameter
+
+        Sort::apply(
+            $filters['sort'] ?? null,
+            $qb,
+            $tableName,
+            ['createdAt', 'travelClass', 'seatNumber']
+        );
+
+        $qb->setFirstResult(($page - 1) * $limit) // Calculate offset
+        ->setMaxResults($limit); // Set limit
+
+        return $qb->getQuery()->getResult();
     }
 
     public function countActiveReservationsByFlightNumber(string $flightNumber): int
