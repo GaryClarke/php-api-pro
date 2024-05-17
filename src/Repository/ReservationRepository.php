@@ -37,7 +37,12 @@ class ReservationRepository extends EntityRepository
         $qb->setFirstResult(($page - 1) * $limit) // Calculate offset
         ->setMaxResults($limit); // Set limit
 
-        return $qb->getQuery()->getResult();
+        $query = $qb->getQuery();
+
+        $query->useQueryCache(true) # caches the query
+            ->enableResultCache(3600); # caches results...becomes stale when new reservations added
+
+        return $query->getResult();
     }
 
     public function countActiveReservationsByFlightNumber(string $flightNumber): int
