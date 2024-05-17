@@ -37,7 +37,11 @@ class ReservationRepository extends EntityRepository
         $qb->setFirstResult(($page - 1) * $limit) // Calculate offset
         ->setMaxResults($limit); // Set limit
 
-        return $qb->getQuery()->getResult();
+        $_ = $qb->getQuery();
+
+        dd($_->getSQL(), $_->getDQL(), $_->getParameters());
+
+//            ->getResult();
     }
 
     public function countActiveReservationsByFlightNumber(string $flightNumber): int
