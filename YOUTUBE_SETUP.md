@@ -18,6 +18,12 @@ Get up and running with this..
 docker compose up -d
 ```
 
+The API will now be reachable at `localhost:8080/healthcheck` 
+
+`{{jet-fu.com}}` is just my environment variable which resolves to `localhost:8080`
+
+---
+
 Then install all the composer dependencies. In order to ensure you have all the same versions as me, run composer __install__, not update. 
 ```shell
 docker compose exec app composer install
@@ -52,6 +58,13 @@ You can use those credentials to connect your DB admin tool of choice. I use [Ta
 You now have all the configuration you need to follow along.
 
 ---
+
+### Making API Requests
+The endpoint which you need to follow along with the reservations pagination is:
+`localhost:8080/flights/JF1001-20250101/reservations`
+
+The endpoint which you need to follow along with the flights sorting is:
+`localhost:8080/flights`
 
 ### Enroll in the Full Course
 The YouTube edit is only a sample section of the full course. You can enroll in the full course here:
