@@ -46,7 +46,8 @@ readonly class ReservationsController extends ApiController
 
             if ($cacheItem->isHit()) {
                 dump('hit');
-                return $cacheItem->get();
+                $response->getBody()->write($cacheItem->get());
+                return $response->withHeader('Cache-Control', 'public, max-age=600');
             }
         }
 
@@ -76,7 +77,16 @@ readonly class ReservationsController extends ApiController
         $response->getBody()->write($jsonReservations);
 
         // Return a cacheable response
-        return $response->withHeader('Cache-Control', 'public, max-age=600');
+        $response = $response->withHeader('Cache-Control', 'public, max-age=600');
+
+        // caching
+        if ($shouldCache) {
+            $cacheItem->set($jsonReservations);
+            $cacheItem->expiresAfter(5);
+            $this->cache->save($cacheItem);
+        }
+
+        return $response;
     }
 
     public function store(Request $request, Response $response, string $number): Response
