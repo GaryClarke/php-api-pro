@@ -35,7 +35,11 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
-        dd($this->cache);
+        $filters = $request->getQueryParams();
+
+        $shouldCache = empty(array_diff(array_keys($filters), ['page']));
+
+
 
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
 
