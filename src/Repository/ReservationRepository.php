@@ -39,9 +39,6 @@ class ReservationRepository extends EntityRepository
 
         $query = $qb->getQuery();
 
-        $query->useQueryCache(true) # caches the query
-            ->enableResultCache(3600); # caches results...becomes stale when new reservations added
-
         return $query->getResult();
     }
 

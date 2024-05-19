@@ -92,5 +92,7 @@ $container->add(\Psr\Log\LoggerInterface::class, function() use ($settings) {
     return $logger;
 });
 
+$container->add(\Symfony\Contracts\Cache\CacheInterface::class, \Symfony\Component\Cache\Adapter\FilesystemAdapter::class);
+
 return $container;
 

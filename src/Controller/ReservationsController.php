@@ -18,6 +18,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
 use Slim\Exception\HttpNotFoundException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Contracts\Cache\CacheInterface;
 
 readonly class ReservationsController extends ApiController
 {
@@ -25,7 +26,8 @@ readonly class ReservationsController extends ApiController
         EntityManagerInterface $entityManager,
         Serializer $serializer,
         EntityValidator $validator,
-        private ReservationRepository $reservationRepository
+        private ReservationRepository $reservationRepository,
+        private CacheInterface $cache
     )
     {
         parent::__construct($entityManager, $serializer, $validator);
@@ -33,6 +35,8 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
+        dd($this->cache);
+
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
 
         $paginationMetadata = PaginationMetadataFactory::create($request, $totalItems);
