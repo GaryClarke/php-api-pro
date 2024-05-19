@@ -15,6 +15,8 @@ require_once dirname(__DIR__) . '/vendor/autoload.php';
 $routeCollector = $app->getRouteCollector();
 $routeCollector->setDefaultInvocationStrategy(new RequestResponseArgs());
 
+$container = $app->getContainer();
+
 // Define routes
 $app->get('/healthcheck', function (Request $request, Response $response) {
     $payload = json_encode(['app' => true]);
@@ -74,12 +76,14 @@ $app->group('/passengers', function (\Slim\Routing\RouteCollectorProxy $group) {
     );
 });
 
-$app->group('', function (\Slim\Routing\RouteCollectorProxy $group) {
+$app->group('', function (\Slim\Routing\RouteCollectorProxy $group) use ($container) {
     // GET collection /flights/<number>/reservations
     $group->get(
         '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}/reservations',
         [\App\Controller\ReservationsController::class, 'index']
-    );
+    )->addMiddleware(new \App\Http\Middleware\Cache\ContentCacheMiddleware(
+        $container->get(\Symfony\Contracts\Cache\CacheInterface::class)
+    ));
 
     // POST /flights/<number>/reservations
     $group->post(
