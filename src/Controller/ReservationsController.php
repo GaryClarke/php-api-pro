@@ -35,24 +35,6 @@ readonly class ReservationsController extends ApiController
 
     public function index(Request $request, Response $response, string $number): Response
     {
-        $filters = $request->getQueryParams();
-
-        $shouldCache = empty(array_diff(array_keys($filters), ['page']));
-
-        $cacheKey = str_replace('/', '', $request->getUri()->getPath()) . ".page=" . ($filters['page'] ?? 1);
-
-        if ($shouldCache) {
-            $cacheItem = $this->cache->getItem($cacheKey);
-
-            if ($cacheItem->isHit()) {
-                dump('hit');
-                $response->getBody()->write($cacheItem->get());
-                return $response->withHeader('Cache-Control', 'public, max-age=600');
-            }
-        }
-
-        dump('miss');
-
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
 
         $paginationMetadata = PaginationMetadataFactory::create($request, $totalItems);
@@ -78,13 +60,6 @@ readonly class ReservationsController extends ApiController
 
         // Return a cacheable response
         $response = $response->withHeader('Cache-Control', 'public, max-age=600');
-
-        // caching
-        if ($shouldCache) {
-            $cacheItem->set($jsonReservations);
-            $cacheItem->expiresAfter(5);
-            $this->cache->save($cacheItem);
-        }
 
         return $response;
     }
