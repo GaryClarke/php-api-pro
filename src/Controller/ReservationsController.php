@@ -39,7 +39,9 @@ readonly class ReservationsController extends ApiController
 
         $shouldCache = empty(array_diff(array_keys($filters), ['page']));
 
+        $cacheKey = str_replace('/', '', $request->getUri()->getPath()) . ".page=" . ($filters['page'] ?? 1);
 
+        dd($cacheKey);
 
         $totalItems = $this->reservationRepository->countActiveReservationsByFlightNumber($number);
 
