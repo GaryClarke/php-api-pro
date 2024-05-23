@@ -24,13 +24,13 @@ $app->get('/healthcheck', function (Request $request, Response $response) {
     return $response->withHeader('Content-Type', 'application/json');
 });
 
-$app->group('/flights', function (\Slim\Routing\RouteCollectorProxy $group) {
+$app->group('/flights', function (\Slim\Routing\RouteCollectorProxy $group) use ($container) {
     $group->get('', [\App\Controller\FlightsController::class, 'index']);
 
     $group->get(
         '/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}',
         [\App\Controller\FlightsController::class, 'show']
-    );
+    )->addMiddleware(new \App\Http\Middleware\Cache\HttpCacheMiddleware());
 
     $group->post('', [\App\Controller\FlightsController::class, 'store']);
 
