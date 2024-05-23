@@ -1,4 +1,4 @@
-<?php
+<?php // src/Http/Middleware/Cache/HttpCacheMiddleware.php
 
 declare(strict_types=1);
 
@@ -11,8 +11,19 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 
 class HttpCacheMiddleware implements MiddlewareInterface
 {
+    public function __construct(
+        private array $cacheControl = []
+    ) {
+    }
+
     public function process(Request $request, RequestHandler $handler): ResponseInterface
     {
-        return $handler->handle($request);
+        $response = $handler->handle($request);
+
+        if (!empty($this->cacheControl)) {
+            $response = $response->withHeader('Cache-Control', implode(', ', $this->cacheControl));
+        }
+
+        return $response;
     }
 }

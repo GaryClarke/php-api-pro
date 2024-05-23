@@ -1,4 +1,4 @@
-<?php
+<?php // routes/api.php
 
 declare(strict_types=1);
 
@@ -30,7 +30,9 @@ $app->group('/flights', function (\Slim\Routing\RouteCollectorProxy $group) use 
     $group->get(
         '/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}',
         [\App\Controller\FlightsController::class, 'show']
-    )->addMiddleware(new \App\Http\Middleware\Cache\HttpCacheMiddleware());
+    )->addMiddleware(new \App\Http\Middleware\Cache\HttpCacheMiddleware(
+        cacheControl: ['public', 'max-age=600', 'must-revalidate']
+    ));
 
     $group->post('', [\App\Controller\FlightsController::class, 'store']);
 
