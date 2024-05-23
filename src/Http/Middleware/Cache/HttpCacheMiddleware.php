@@ -12,7 +12,8 @@ use Psr\Http\Server\RequestHandlerInterface as RequestHandler;
 class HttpCacheMiddleware implements MiddlewareInterface
 {
     public function __construct(
-        private array $cacheControl = []
+        private array $cacheControl = [],
+        private ?int $expires = null
     ) {
     }
 
@@ -22,6 +23,10 @@ class HttpCacheMiddleware implements MiddlewareInterface
 
         if (!empty($this->cacheControl)) {
             $response = $response->withHeader('Cache-Control', implode(', ', $this->cacheControl));
+        }
+
+        if ($this->expires) {
+            $response = $response->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
         }
 
         return $response;
