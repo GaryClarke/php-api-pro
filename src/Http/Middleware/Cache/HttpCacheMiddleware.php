@@ -14,7 +14,8 @@ class HttpCacheMiddleware implements MiddlewareInterface
     public function __construct(
         private array $cacheControl = [],
         private ?int $expires = null,
-        private array $vary = []
+        private array $vary = [],
+        private bool $includeContentLength = true
     ) {
     }
 
@@ -32,6 +33,11 @@ class HttpCacheMiddleware implements MiddlewareInterface
 
         if (!empty($this->vary)) {
             $response = $response->withHeader('Vary', implode(', ', $this->vary));
+        }
+
+        if ($this->includeContentLength) {
+            $contentLength = $response->getBody()->getSize();
+            $response = $response->withHeader('Content-Length', (string) $contentLength);
         }
 
         return $response;
