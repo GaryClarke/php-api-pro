@@ -13,7 +13,8 @@ class HttpCacheMiddleware implements MiddlewareInterface
 {
     public function __construct(
         private array $cacheControl = [],
-        private ?int $expires = null
+        private ?int $expires = null,
+        private array $vary = []
     ) {
     }
 
@@ -27,6 +28,10 @@ class HttpCacheMiddleware implements MiddlewareInterface
 
         if ($this->expires) {
             $response = $response->withHeader('Expires', gmdate('D, d M Y H:i:s', time() + $this->expires) . ' GMT');
+        }
+
+        if (!empty($this->vary)) {
+            $response = $response->withHeader('Vary', implode(', ', $this->vary));
         }
 
         return $response;

@@ -32,7 +32,8 @@ $app->group('/flights', function (\Slim\Routing\RouteCollectorProxy $group) use 
         [\App\Controller\FlightsController::class, 'show']
     )->addMiddleware(new \App\Http\Middleware\Cache\HttpCacheMiddleware(
         cacheControl: ['public', 'max-age=600', 'must-revalidate'],
-        expires: 600
+        expires: 600,
+        vary: ['Accept-Encoding']
     ));
 
     $group->post('', [\App\Controller\FlightsController::class, 'store']);
