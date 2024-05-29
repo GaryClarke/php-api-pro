@@ -34,6 +34,8 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
             // Authenticate jwt
             $payload = $this->tokenAuthenticator->authenticate($jwt);
 
+            dd($payload);
+
         } catch (\Exception $exception) {
             throw new HttpUnauthorizedException($request, "Unable to authenticate");
         }

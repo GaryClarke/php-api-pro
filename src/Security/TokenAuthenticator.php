@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
+
 class TokenAuthenticator
 {
-    public function authenticate(string $jwt)
+    public function authenticate(string $jwt): object
     {
         // Retrieve jwks (public key set) from cache or auth server
         // https://some-auth-server/.well-known/jwks.json
@@ -15,7 +18,7 @@ class TokenAuthenticator
         // Use the public key to decode the jwt
         $key = $this->selectKey($jwt, $jwks);
 
-
+        return JWT::decode($jwt, new Key($key, 'RS256'));
     }
 
     private function selectKey(string $jwt, $jwks): string
