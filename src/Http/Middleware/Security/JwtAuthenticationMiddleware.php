@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Middleware\Security;
 
+use App\Security\TokenAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Server\MiddlewareInterface;
@@ -12,6 +13,11 @@ use Slim\Exception\HttpUnauthorizedException;
 
 class JwtAuthenticationMiddleware implements MiddlewareInterface
 {
+    public function __construct(
+        private TokenAuthenticator $tokenAuthenticator
+    ) {
+    }
+
     public function process(Request $request, RequestHandler $handler): ResponseInterface
     {
         // Grab the authorization header
@@ -22,6 +28,14 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
             throw new HttpUnauthorizedException($request, "Unable to authenticate");
         }
 
-        dd($header, $matches[1]);
+        try {
+            $jwt = $matches[1];
+
+            // Authenticate jwt
+            $payload = $this->tokenAuthenticator->authenticate($jwt);
+
+        } catch (\Exception $exception) {
+            throw new HttpUnauthorizedException($request, "Unable to authenticate");
+        }
     }
 }
