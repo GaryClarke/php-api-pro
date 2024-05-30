@@ -11,6 +11,7 @@ use App\Entity\Reservation;
 use App\Pagination\PaginationMetadata;
 use App\Pagination\PaginationMetadataFactory;
 use App\Repository\ReservationRepository;
+use App\Security\AccessControlManager;
 use App\Serializer\Serializer;
 use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\StatusCodeInterface;
@@ -191,6 +192,9 @@ readonly class ReservationsController extends ApiController
                 ]
             ]
         );
+
+        // if (!$this->accessControlManager->can(UPDATE_RESERVATION, $user, $reservation)) {
+            // throw exception
 
         // Validate
         $this->validator->validate($reservation, $request);
