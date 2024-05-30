@@ -113,7 +113,9 @@ $app->group('', function (\Slim\Routing\RouteCollectorProxy $group) use ($contai
         ['PUT', 'PATCH'],
         '/reservations/{reference:[0-9]+JF[0-9]{4}}',
         [\App\Controller\ReservationsController::class, 'update']
-    );
+    )->addMiddleware(new \App\Http\Middleware\Security\JwtAuthenticationMiddleware(
+        $container->get(\App\Security\TokenAuthenticator::class)
+    ));
 });
 
 

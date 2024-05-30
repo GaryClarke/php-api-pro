@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'passengers')]
-class Passenger implements EntityInterface
+class Passenger implements ResourceInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

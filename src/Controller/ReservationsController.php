@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\EntityValidator;
+use App\Entity\ResourceValidator;
 use App\Entity\Flight;
 use App\Entity\Passenger;
 use App\Entity\Reservation;
@@ -26,9 +26,9 @@ readonly class ReservationsController extends ApiController
     public function __construct(
         EntityManagerInterface $entityManager,
         Serializer $serializer,
-        EntityValidator $validator,
+        ResourceValidator $validator,
         private ReservationRepository $reservationRepository,
-        private CacheInterface $cache
+        private AccessControlManager $accessControlManager
     )
     {
         parent::__construct($entityManager, $serializer, $validator);
@@ -193,8 +193,11 @@ readonly class ReservationsController extends ApiController
             ]
         );
 
-        // if (!$this->accessControlManager->can(UPDATE_RESERVATION, $user, $reservation)) {
-            // throw exception
+        $user = $request->getAttribute('user');
+
+         if (!$this->accessControlManager->can('UPDATE_RESERVATION', $user, $reservation)) {
+            dd($user);
+         }
 
         // Validate
         $this->validator->validate($reservation, $request);

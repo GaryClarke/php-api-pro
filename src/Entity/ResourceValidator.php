@@ -8,14 +8,14 @@ use App\Http\Error\Exception\ValidationException;
 use Psr\Http\Message\ServerRequestInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class EntityValidator
+class ResourceValidator
 {
     public function __construct(
         private ValidatorInterface $validator
     ) {
     }
 
-    public function validate(EntityInterface $entity, ServerRequestInterface $request, array $groups = []): void
+    public function validate(ResourceInterface $entity, ServerRequestInterface $request, array $groups = []): void
     {
         // Get errors array off validate()
         $errors = $this->validator->validate(value: $entity, groups: $groups);

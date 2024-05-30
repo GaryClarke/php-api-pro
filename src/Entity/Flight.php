@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: \App\Repository\FlightRepository::class)]
 #[ORM\Table(name: 'flights')]
-class Flight implements EntityInterface
+class Flight implements ResourceInterface
 {
     public const CREATE_GROUP = 'create';
     public const UPDATE_GROUP = 'update';

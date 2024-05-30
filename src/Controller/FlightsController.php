@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\EntityValidator;
+use App\Entity\ResourceValidator;
 use App\Entity\Flight;
 use App\Pagination\PaginationMetadataFactory;
 use App\Repository\FlightRepository;
@@ -18,9 +18,9 @@ use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 readonly class FlightsController extends ApiController
 {
     public function __construct(
-        EntityManagerInterface $entityManager,
-        Serializer $serializer,
-        EntityValidator $validator,
+        EntityManagerInterface   $entityManager,
+        Serializer               $serializer,
+        ResourceValidator        $validator,
         private FlightRepository $flightRepository
     )
     {

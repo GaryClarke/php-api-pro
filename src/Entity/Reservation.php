@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: \App\Repository\ReservationRepository::class)]
 #[ORM\Table(name: 'reservations')]
-class Reservation implements EntityInterface
+class Reservation implements ResourceInterface
 {
     public const CANCEL_GROUP = 'cancel';
 
