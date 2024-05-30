@@ -1,9 +1,10 @@
-<?php
+<?php // src/Http/Middleware/Security/JwtAuthenticationMiddleware.php
 
 declare(strict_types=1);
 
 namespace App\Http\Middleware\Security;
 
+use App\Entity\User;
 use App\Security\TokenAuthenticator;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -34,10 +35,14 @@ class JwtAuthenticationMiddleware implements MiddlewareInterface
             // Authenticate jwt
             $payload = $this->tokenAuthenticator->authenticate($jwt);
 
-            dd($payload);
-
         } catch (\Exception $exception) {
             throw new HttpUnauthorizedException($request, "Unable to authenticate");
         }
+
+        $user = User::createFromToken($payload);
+
+        $request = $request->withAttribute('user', $user);
+
+        return $handler->handle($request);
     }
 }
