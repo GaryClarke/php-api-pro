@@ -9,7 +9,24 @@ use App\Entity\User;
 
 class AccessControlManager
 {
+    // roles
     public const ROLE_ADMIN = 'admin';
+    public const ROLE_PARTNER = 'partner';
+
+    // permissions
+    public const UPDATE_RESERVATION = 'UPDATE_RESERVATION';
+    public const CREATE_RESERVATION = 'CREATE_RESERVATION';
+
+    public array $rolePermissions = [
+        self::ROLE_ADMIN => [],
+        self::ROLE_PARTNER => [self::UPDATE_RESERVATION, self::CREATE_RESERVATION]
+    ];
+
+    public function hasPermission(string $role, string $permission): bool
+    {
+        return in_array($permission, $this->rolePermissions[$role]);
+    }
+
 
     public function can(string $permission, User $user, ResourceInterface $resource): bool
     {
@@ -18,7 +35,7 @@ class AccessControlManager
             return true;
         }
 
-        return false;
+        return $this->hasPermission($user->getRole(), $permission);
 
         // Has permission + is creator of the resource
     }

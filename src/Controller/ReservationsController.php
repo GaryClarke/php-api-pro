@@ -195,11 +195,15 @@ readonly class ReservationsController extends ApiController
 
         $user = $request->getAttribute('user');
 
-         if (!$this->accessControlManager->can('UPDATE_RESERVATION', $user, $reservation)) {
-            dd($user);
+         if (!$this->accessControlManager->can(
+             AccessControlManager::UPDATE_RESERVATION,
+             $user,
+             $reservation)
+         ) {
+            dd('not permitted');
          }
 
-         dd('is admin!');
+         dd('permitted');
 
         // Validate
         $this->validator->validate($reservation, $request);
