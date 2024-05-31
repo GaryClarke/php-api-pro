@@ -38,6 +38,9 @@ class Reservation implements ResourceInterface
     #[Assert\Choice(choices: ['Economy', 'Business', 'First'])]
     private string $travelClass;
 
+    #[ORM\Column(type: 'string', length: 255, nullable: false)]
+    private string $ownerId;
+
     #[ORM\Column(type: 'datetime_immutable')]
     private DateTimeInterface $createdAt;
 
@@ -126,5 +129,15 @@ class Reservation implements ResourceInterface
         }
 
         $this->cancelledAt = $cancelledAt;
+    }
+
+    public function getOwnerId(): string
+    {
+        return $this->ownerId;
+    }
+
+    public function setOwnerId(string $ownerId): void
+    {
+        $this->ownerId = $ownerId;
     }
 }
