@@ -105,6 +105,6 @@ class Passenger implements ResourceInterface
 
     public function getOwnerId(): string
     {
-        // TODO: Implement getOwnerId() method.
+        return '';
     }
 }

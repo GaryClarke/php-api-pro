@@ -87,6 +87,8 @@ readonly class ReservationsController extends ApiController
             throw new HttpNotFoundException($request, "Flight {$reservationJson['flightNumber']} not found.");
         }
 
+        $user = $request->getAttribute('user');
+
         // Create new Reservation
         $reservation = new Reservation();
         $reference = strstr(time() . $number, '-', true);
@@ -95,6 +97,7 @@ readonly class ReservationsController extends ApiController
         $reservation->setPassenger($passenger);
         $reservation->setSeatNumber($reservationJson['seatNumber']);
         $reservation->setTravelClass($reservationJson['travelClass']);
+        $reservation->setOwnerId($user->getId());
 
         // Validate the reservation
         $this->validator->validate($reservation, $request);

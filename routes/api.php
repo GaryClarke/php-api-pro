@@ -93,7 +93,13 @@ $app->group('', function (\Slim\Routing\RouteCollectorProxy $group) use ($contai
     $group->post(
         '/flights/{number:[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}}/reservations',
         [\App\Controller\ReservationsController::class, 'store']
-    )->addMiddleware(new \App\Http\Middleware\Security\JwtAuthenticationMiddleware(
+    )->addMiddleware(
+        new \App\Http\Middleware\Security\PermissionsMiddleware(
+            $container->get(\App\Security\AccessControlManager::class),
+            \App\Security\AccessControlManager::CREATE_RESERVATION
+        )
+    )->addMiddleware(
+        new \App\Http\Middleware\Security\JwtAuthenticationMiddleware(
         $container->get(\App\Security\TokenAuthenticator::class)
     ));
 
