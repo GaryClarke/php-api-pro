@@ -97,4 +97,9 @@ class Flight implements ResourceInterface
 
         $this->arrivalTime = $arrivalTime;
     }
+
+    public function getOwnerId(): string
+    {
+        // TODO: Implement getOwnerId() method.
+    }
 }

@@ -21,4 +21,9 @@ readonly class User
     {
         return $this->role;
     }
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
 }

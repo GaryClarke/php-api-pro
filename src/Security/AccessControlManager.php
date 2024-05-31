@@ -35,8 +35,8 @@ class AccessControlManager
             return true;
         }
 
-        return $this->hasPermission($user->getRole(), $permission);
-
         // Has permission + is creator of the resource
+        return $this->hasPermission($user->getRole(), $permission)
+            && $user->getId() === $resource->getOwnerId();
     }
 }

@@ -6,5 +6,5 @@ namespace App\Entity;
 
 interface ResourceInterface
 {
-
+    public function getOwnerId(): string;
 }

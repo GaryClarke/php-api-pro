@@ -102,4 +102,9 @@ class Passenger implements ResourceInterface
     {
         $this->nationality = $nationality;
     }
+
+    public function getOwnerId(): string
+    {
+        // TODO: Implement getOwnerId() method.
+    }
 }

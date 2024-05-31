@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Fig\Http\Message\StatusCodeInterface;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Http\Message\ResponseInterface as Response;
+use Slim\Exception\HttpForbiddenException;
 use Slim\Exception\HttpNotFoundException;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -200,10 +201,8 @@ readonly class ReservationsController extends ApiController
              $user,
              $reservation)
          ) {
-            dd('not permitted');
+            throw new HttpForbiddenException($request, "You can not update this reservation");
          }
-
-         dd('permitted');
 
         // Validate
         $this->validator->validate($reservation, $request);
