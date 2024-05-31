@@ -22,6 +22,14 @@ class AccessControlManager
         self::ROLE_PARTNER => [self::UPDATE_RESERVATION, self::CREATE_RESERVATION]
     ];
 
+    public function __construct()
+    {
+        $this->rolePermissions['admin'] = array_merge(
+            $this->rolePermissions['admin'],
+            $this->rolePermissions['partner']
+        );
+    }
+
     public function hasPermission(string $role, string $permission): bool
     {
         return in_array($permission, $this->rolePermissions[$role]);
