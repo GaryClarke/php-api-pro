@@ -199,6 +199,8 @@ readonly class ReservationsController extends ApiController
             dd($user);
          }
 
+         dd('is admin!');
+
         // Validate
         $this->validator->validate($reservation, $request);
 

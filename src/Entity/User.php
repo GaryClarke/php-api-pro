@@ -16,4 +16,9 @@ readonly class User
     {
         return new self($token->sub, $token->role ?? 'user');
     }
+
+    public function getRole(): string
+    {
+        return $this->role;
+    }
 }
