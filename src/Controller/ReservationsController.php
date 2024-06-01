@@ -199,7 +199,7 @@ readonly class ReservationsController extends ApiController
 
         $user = $request->getAttribute('user');
 
-         if (!$this->accessControlManager->can(
+         if (!$this->accessControlManager->allows(
              AccessControlManager::UPDATE_RESERVATION,
              $user,
              $reservation)

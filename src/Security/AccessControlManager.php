@@ -36,7 +36,7 @@ class AccessControlManager
     }
 
 
-    public function can(string $permission, User $user, ResourceInterface $resource): bool
+    public function allows(string $permission, User $user, ResourceInterface $resource): bool
     {
         // Is an admin
         if ($user->getRole() === self::ROLE_ADMIN) {
