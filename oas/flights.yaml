@@ -71,7 +71,7 @@ paths:
                     items:
                       $ref: '#/components/schemas/FlightResponse'
                   links:
-                    $ref: '#/components/schemas/Links'
+                    $ref: '#/components/schemas/FlightLinks'
                   meta:
                     $ref: '#/components/schemas/Meta'
 
@@ -902,19 +902,11 @@ components:
 
   securitySchemes:
 
-    FlightsAuth:
-      type: oauth2
-      flows:
-        implicit:
-          authorizationUrl: https://jet-fu.com/oauth/authorize
-          scopes:
-            write:flights: modify flights
-            read:flights: read flights
-
-    ApiKeyAuth: # Arbitrary name for the security scheme
-      type: apiKey
-      in: header # The location of the API key (query, header, cookie)
-      name: api_key # The name of the header or query parameter to be used
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Enter JWT token to authorize
 
 security:
-  - ApiKeyAuth: [] # Apply the ApiKeyAuth security scheme globally
+  - BearerAuth: [] # Apply the BearerAuth security scheme globally
