@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Migration Guide from v1 to v2</title>
+</head>
+<body>
+<h2>Migration Guide from v1 to v2</h2>
+
+<p><strong>Transitioning from <code>/api/v1/old-feature</code> to <code>/api/v2/new-feature</code></strong></p>
+
+<h3>Request changes:</h3>
+<pre>
+    GET /api/v1/old-feature?param=value
+</pre>
+<pre>
+    GET /api/v2/new-feature?new_param=new_value
+</pre>
+
+<h3>Response changes:</h3>
+<p>Previous response:</p>
+<pre>
+{
+    "old_key": "old_value"
+}
+</pre>
+<p>Is now:</p>
+<pre>
+{
+    "new_key": "new_value"
+}
+</pre>
+
+<h3>Handling Deprecated Endpoints</h3>
+<p>The deprecated endpoints will remain functional until 2023-01-01, allowing time for transition. Contact support for
+    assistance.</p>
+</body>
+</html>
