@@ -50,6 +50,10 @@ readonly class PassengersController extends ApiController
             Passenger::class
         );
 
+        if (!$passenger->getCountryOfOrigin()) {
+            $passenger->setCountryOfOrigin($passenger->getNationality());
+        }
+
         assert($passenger instanceof Passenger);
 
         $passenger->setReference(time() . strtoupper(substr($passenger->getLastName(), 0, 3)));

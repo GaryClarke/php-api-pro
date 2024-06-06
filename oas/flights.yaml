@@ -289,8 +289,8 @@ paths:
           description: Filter by flight number
           required: true
           schema:
-           type: string
-           $ref: '#/components/schemas/FlightNumber'
+            type: string
+            $ref: '#/components/schemas/FlightNumber'
       requestBody:
         description: Reservation request body
         content:
@@ -757,11 +757,18 @@ components:
           example: '1977-06-09'
         gender:
           type: string
-          enum: ['Male', 'Female', 'Other']
+          enum: [ 'Male', 'Female', 'Other' ]
           example: 'Male'
         nationality:
           type: string
+          deprecated: true
+          description: 'Deprecated: Please use countryOfOrigin instead. This field will be removed in the future.'
           example: 'UK'
+        countryOfOrigin:
+          type: string
+          description: 'The country of origin of the passenger, replacing the deprecated nationality field.'
+          example: 'United Kingdom'
+
 
     #--------------- PassengerResponse ---------------
     PassengerResponse:
@@ -901,7 +908,6 @@ components:
 
 
   securitySchemes:
-
     BearerAuth:
       type: http
       scheme: bearer
@@ -909,4 +915,4 @@ components:
       description: Enter JWT token to authorize
 
 security:
-  - BearerAuth: [] # Apply the BearerAuth security scheme globally
+  - BearerAuth: [ ] # Apply the BearerAuth security scheme globally

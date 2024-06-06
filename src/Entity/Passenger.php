@@ -5,6 +5,7 @@ namespace App\Entity;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
+use JetBrains\PhpStorm\Deprecated;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
@@ -37,7 +38,15 @@ class Passenger implements ResourceInterface
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Assert\NotBlank()]
+    #[Deprecated(
+        reason: "Use 'countryOfOrigin' to comply with aviation regulations.",
+        replacement: "Use 'countryOfOrigin' instead of 'nationality'."
+    )]
     private ?string $nationality = null;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\NotBlank()]
+    private ?string $countryOfOrigin = null;
 
     public function getReference(): string
     {
@@ -101,6 +110,16 @@ class Passenger implements ResourceInterface
     public function setNationality(?string $nationality): void
     {
         $this->nationality = $nationality;
+    }
+
+    public function getCountryOfOrigin(): ?string
+    {
+        return $this->countryOfOrigin;
+    }
+
+    public function setCountryOfOrigin(?string $countryOfOrigin): void
+    {
+        $this->countryOfOrigin = $countryOfOrigin;
     }
 
     public function getOwnerId(): string
