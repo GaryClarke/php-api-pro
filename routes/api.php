@@ -79,7 +79,9 @@ $app->group('/v1', function (\Slim\Routing\RouteCollectorProxy $group) use ($con
         $group->patch(
             '/{reference:[0-9]+[A-Z]{3}}',
             [\App\Controller\PassengersController::class, 'update']
-        );
+        )->addMiddleware(new \App\Http\Middleware\Deprecations\SunsetHeaderMiddleware(
+            '2026-01-01'
+        ));
     });
 
     $group->group('', function (\Slim\Routing\RouteCollectorProxy $group) use ($container) {
