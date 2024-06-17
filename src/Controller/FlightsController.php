@@ -68,8 +68,8 @@ readonly class FlightsController extends ApiController
 
         // Serialize the flights
         $jsonFlight = $this->serializer->serialize(
-            ['flight' => $flight],
-            $request->getAttribute('content-type')->format()
+            data: ['flight' => $flight],
+            context: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['ownerId']]
         );
 
         $response->getBody()->write($jsonFlight);
@@ -97,7 +97,8 @@ readonly class FlightsController extends ApiController
 
         // Serialize the new flight
         $jsonFlight = $this->serializer->serialize(
-            ['flight' => $flight]
+            data: ['flight' => $flight],
+            context: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['ownerId']]
         );
 
         // Add the flight to the response body
@@ -158,7 +159,8 @@ readonly class FlightsController extends ApiController
 
         // Serialize the updated flight
         $jsonFlight = $this->serializer->serialize(
-            ['flight' => $flight]
+            data: ['flight' => $flight],
+            context: [AbstractNormalizer::IGNORED_ATTRIBUTES => ['ownerId']]
         );
 
         // Add the flight to the response body

@@ -18,7 +18,8 @@ class FlightRepository extends EntityRepository
     {
         $tableName = 'flights';
 
-        $qb = $this->createQueryBuilder($tableName);
+        $qb = $this->createQueryBuilder($tableName)
+            ->select("$tableName.number, $tableName.origin, $tableName.destination, $tableName.departureTime, $tableName.arrivalTime");
 
         $this->applyFilters($qb, $filters, $tableName);
 
