@@ -1,0 +1,627 @@
+{
+	"info": {
+		"_postman_id": "c754a41e-8f8c-44e7-9b8b-b83119d89dc7",
+		"name": "Flights API Testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "3303442"
+	},
+	"item": [
+		{
+			"name": "status",
+			"item": [
+				{
+					"name": "healthcheck",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.clear();",
+									"console.log('My first pre request');"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body is correct\", function () {",
+									"",
+									"    let responseBody = pm.response.json();",
+									"",
+									"    pm.expect(responseBody).to.be.an('object');",
+									"    pm.expect(responseBody.app).to.eql(true);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/healthcheck",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"healthcheck"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "flights",
+			"item": [
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Schema is valid\", function() {",
+									"    const schema = {",
+									"        type: 'object',",
+									"        properties: {",
+									"            flight: {",
+									"                type: 'object',",
+									"                properties: {",
+									"                    number: {",
+									"                        type: 'string',",
+									"                        pattern: '^[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}$'",
+									"                    },",
+									"                    origin: {",
+									"                        type: 'string'",
+									"                    },",
+									"                    destination: {",
+									"                        type: 'string'",
+									"                    },",
+									"                    departureTime: {",
+									"                        type: 'string',",
+									"                        format: 'date-time'",
+									"                    },",
+									"                    arrivalTime: {",
+									"                        type: 'string',",
+									"                        format: 'date-time'",
+									"                    }",
+									"                },",
+									"                required: ['number', 'origin', 'destination', 'departureTime', 'arrivalTime'],",
+									"                additionalProperties: false",
+									"            }",
+									"        },",
+									"        required: ['flight'],",
+									"        additionalProperties: false",
+									"    }    ",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"number\": \"{{testFlightNumber}}\",\n    \"origin\": \"ABC\",\n    \"destination\": \"DEF\",\n    \"departureTime\": \"2026-01-01T13:45:00+00:00\",\n    \"arrivalTime\": \"2026-01-01T19:00:00+00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "flights",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"number\": \"{{testFlightNumber}}\",\n    \"origin\": \"ABC\",\n    \"destination\": \"DEF\",\n    \"departureTime\": \"2026-01-01T13:45:00+00:00\",\n    \"arrivalTime\": \"2026-01-01T19:00:00+00:00\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/flights",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"flights"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Server",
+									"value": "nginx/1.24.0"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 18 Jun 2024 12:16:22 GMT"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Transfer-Encoding",
+									"value": "chunked"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.3.0"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"flight\": {\n        \"number\": \"JF1012-20260101\",        \n        \"destination\": \"DEF\",\n        \"departureTime\": \"2026-01-01T13:45:00+00:00\",\n        \"arrivalTime\": \"2026-01-01T19:00:00+00:00\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Schema is valid\", function() {",
+									"    const schema = {",
+									"        type: 'object',",
+									"        properties: {",
+									"            flight: {",
+									"                type: 'object',",
+									"                properties: {",
+									"                    number: {",
+									"                        type: 'string',",
+									"                        pattern: '^[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}$'",
+									"                    },",
+									"                    origin: {",
+									"                        type: 'string'",
+									"                    },",
+									"                    destination: {",
+									"                        type: 'string'",
+									"                    },",
+									"                    departureTime: {",
+									"                        type: 'string',",
+									"                        format: 'date-time'",
+									"                    },",
+									"                    arrivalTime: {",
+									"                        type: 'string',",
+									"                        format: 'date-time'",
+									"                    }",
+									"                },",
+									"                required: ['number', 'origin', 'destination', 'departureTime', 'arrivalTime'],",
+									"                additionalProperties: false",
+									"            }",
+									"        },",
+									"        required: ['flight'],",
+									"        additionalProperties: false",
+									"    }    ",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:number",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":number"
+							],
+							"variable": [
+								{
+									"key": "number",
+									"value": "{{testFlightNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within an acceptable range\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"pm.test(\"destination has been updated\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.flight.destination).to.eql('XXX');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"origin\": \"ABC\",\n    \"destination\": \"XXX\",\n    \"departureTime\": \"2024-01-21T08:00:00+00:00\",\n    \"arrivalTime\": \"2024-01-21T10:00:00+00:00\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights/:number",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":number"
+							],
+							"variable": [
+								{
+									"key": "number",
+									"value": "{{testFlightNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Response time is within an acceptable range\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"pm.test(\"destination has been updated\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData.flight.destination).to.eql('DEF');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"destination\": \"DEF\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/flights/:number",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":number"
+							],
+							"variable": [
+								{
+									"key": "number",
+									"value": "{{testFlightNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "number",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});",
+									"",
+									"pm.test(\"Response time is within an acceptable range\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:number",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":number"
+							],
+							"variable": [
+								{
+									"key": "number",
+									"value": "{{testFlightNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "number after delete",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights/:number",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights",
+								":number"
+							],
+							"variable": [
+								{
+									"key": "number",
+									"value": "{{testFlightNumber}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response time is less than 300ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(300);",
+									"});",
+									"",
+									"pm.test(\"Content-Type header is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+									"});",
+									"",
+									"pm.test(\"Schema is valid\", function () {",
+									"    const schema = {",
+									"        type: \"object\",",
+									"        properties: {",
+									"            flights: {",
+									"                type: \"array\",",
+									"                items: {",
+									"                    type: \"object\",",
+									"                    properties: {",
+									"                        number: {",
+									"                            type: 'string',",
+									"                            pattern: '^[A-Za-z]{2}[0-9]{1,4}-[0-9]{8}$'",
+									"                        },",
+									"                        origin: { type: \"string\" },",
+									"                        destination: { type: \"string\" },",
+									"                        departureTime: {",
+									"                            type: 'string',",
+									"                            format: 'date-time'",
+									"                        },",
+									"                        arrivalTime: {",
+									"                            type: 'string',",
+									"                            format: 'date-time'",
+									"                        }",
+									"                    },",
+									"                    required: [\"number\", \"origin\", \"destination\", \"departureTime\", \"arrivalTime\"],",
+									"                    additionalProperties: false",
+									"                }",
+									"            },",
+									"            links: {",
+									"                type: \"object\",",
+									"                properties: {",
+									"                    self: { type: \"string\" },",
+									"                    first: { type: \"string\" },",
+									"                    last: { type: \"string\" },",
+									"                    prev: { type: \"null\" },",
+									"                    next: { type: \"string\" }",
+									"                },",
+									"                required: [\"self\", \"first\", \"last\", \"prev\", \"next\"]",
+									"            },",
+									"            meta: {",
+									"                type: \"object\",",
+									"                properties: {",
+									"                    totalItems: { type: \"number\" },",
+									"                    totalPages: { type: \"number\" },",
+									"                    currentPage: { type: \"number\" },",
+									"                    itemsPerPage: { type: \"number\" }",
+									"                },",
+									"                required: [\"totalItems\", \"totalPages\", \"currentPage\", \"itemsPerPage\"]",
+									"            }",
+									"        },",
+									"        required: [\"flights\", \"links\", \"meta\"],",
+									"        additionalProperties: false",
+									"    };",
+									"    pm.response.to.have.jsonSchema(schema);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/flights",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"flights"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
