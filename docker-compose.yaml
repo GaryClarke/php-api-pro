@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
     web:
-        image: garyclarke/pap-web
+        image: garyclarke/nginx24-multi
         ports:
             - "8080:80"  # Maps port 8080 on the host to port 80 in the container
             - "8443:443" # Maps port 8443 on the host to port 443 in the container (if you're using HTTPS)
         volumes:
             - ./public:/var/www/html/public
     app:
-        image: garyclarke/pap-app
+        image: garyclarke/php83-multi
         environment:
             MARIADB_HOST: db
         volumes:
